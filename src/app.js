@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  var F = window.GHG_FACTORS, E = window.GHG, X = window.GHGX, XP = window.GHGEXP, SRC = window.GHG_SOURCES || { sources: [] }, MONTHS = E.MONTHS;
+  var F = window.GHG_FACTORS, E = window.GHG, X = window.GHGX, XP = window.GHGEXP, XC = window.GHGCHART, SRC = window.GHG_SOURCES || { sources: [] }, MONTHS = E.MONTHS;
   var $ = function (s, el) { return (el || document).querySelector(s); };
   function h(tag, attrs, kids) {
     var el = document.createElement(tag);
@@ -297,7 +297,7 @@
     put(root, importMsg());
     put(root, issuesNotice());
     var first = ms[0], last = ms[ms.length - 1];
-    var hero = h('div', { class: 'card hero' }, [h('div', { class: 'lbl' }, ['Total emissions · ' + periodLabel()]),
+    var hero = h('div', { class: 'card hero' }, [sum.total > 0 ? chartTools(function () { return specScopes(sum); }) : null, h('div', { class: 'lbl' }, ['Total emissions · ' + periodLabel()]),
       h('div', null, [h('span', { class: 'num' }, [fmtT(sum.total / 1000)]), h('span', { class: 'unit' }, ['tCO₂e'])]),
       h('div', { class: 'meta' }, [ms.length ? ms.length + ' month' + (ms.length > 1 ? 's' : '') + ' of data, ' + MONTHS[first.mi].slice(0, 3) + ' ' + first.y + ' to ' + MONTHS[last.mi].slice(0, 3) + ' ' + last.y : 'No data in this period']),
       sum.total > 0 ? hbar([1, 2, 3].map(function (s) { return { name: SCOPES[s].name + ' · ' + SCOPES[s].desc, short: SCOPES[s].name, v: sum.t[s], c: SCOPES[s].c, href: '#/scope/' + s }; }), sum.total) : null]);
@@ -309,9 +309,9 @@
     var g2 = h('div', { class: 'g2 mt' });
     var series = [1, 2, 3].map(function (s) { return { id: s, name: SCOPES[s].name, c: SCOPES[s].c }; });
     var cb = h('div', { class: 'chartbox' });
-    g2.appendChild(h('div', { class: 'card' }, [h('h2', null, ['Month by month']), h('p', { class: 'sub' }, ['Tonnes CO₂e per month, by scope.']), legend(series), cb]));
+    g2.appendChild(h('div', { class: 'card' }, [ms.length ? chartTools(function () { return specScopeMonths(ms); }) : null, h('h2', null, ['Month by month']), h('p', { class: 'sub' }, ['Tonnes CO₂e per month, by scope.']), legend(series), cb]));
     var top = Object.keys(CAT).map(function (id) { return { id: id, name: CAT[id].label, v: sum.kg[id], c: SCOPES[CAT[id].scope].c, href: '#/scope/' + CAT[id].scope + '/' + id }; }).filter(function (x) { return x.v > 0; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 7);
-    g2.appendChild(h('div', { class: 'card' }, [h('h2', null, ['Largest sources']), h('p', { class: 'sub', style: 'margin-bottom:0' }, ['Coloured by scope. Click a source to see its detail.']), legend(series), rankList(top, sum.total)]));
+    g2.appendChild(h('div', { class: 'card' }, [top.length ? chartTools(function () { return specTopSources(sum); }) : null, h('h2', null, ['Largest sources']), h('p', { class: 'sub', style: 'margin-bottom:0' }, ['Coloured by scope. Click a source to see its detail.']), legend(series), rankList(top, sum.total)]));
     put(root, g2);
     requestAnimationFrame(function () { columns(cb, monthItems(ms, function (m) { return { 1: m.t[1], 2: m.t[2], 3: m.t[3] }; }), series, { label: 'Monthly emissions by scope' }); });
   }
@@ -322,7 +322,7 @@
     put(root, h('div', { class: 'head' }, [h('div', null, [h('h1', { class: 'pg' }, [sc.name + ' · ' + sc.desc]), h('div', { class: 'hint' }, [sc.long])]), filters()]));
     var items = sc.cats.map(function (id) { return { id: id, name: CAT[id].label, short: CAT[id].label, v: sum.kg[id], c: CAT[id].c, href: '#/scope/' + s + '/' + id }; });
     var withData = items.filter(function (x) { return x.v > 0; }).sort(function (a, b) { return b.v - a.v; }), none = items.filter(function (x) { return x.v <= 0; });
-    put(root, h('div', { class: 'card hero' }, [h('div', { class: 'lbl' }, [sc.name + ' emissions · ' + periodLabel()]),
+    put(root, h('div', { class: 'card hero' }, [tot > 0 ? chartTools(function () { return specScopeCats(s, sum); }) : null, h('div', { class: 'lbl' }, [sc.name + ' emissions · ' + periodLabel()]),
       h('div', null, [h('span', { class: 'num', style: 'font-size:48px' }, [fmtT(tot / 1000)]), h('span', { class: 'unit' }, ['tCO₂e'])]),
       h('div', { class: 'meta' }, [pct(tot, sum.total) + ' of your total emissions']),
       tot > 0 ? hbar(withData, tot, true) : null,
@@ -331,7 +331,7 @@
     if (withData.length) {
       var series = sc.cats.map(function (id) { return { id: id, name: CAT[id].label, c: CAT[id].c }; }).filter(function (x) { return sum.kg[x.id] > 0; });
       var cb = h('div', { class: 'chartbox' });
-      put(root, h('div', { class: 'card' }, [h('h2', null, ['Month by month']), h('p', { class: 'sub' }, ['Tonnes CO₂e per month, by source.']), legend(series), cb]));
+      put(root, h('div', { class: 'card' }, [chartTools(function () { return specScopeMonths2(s, ms, sum); }), h('h2', null, ['Month by month']), h('p', { class: 'sub' }, ['Tonnes CO₂e per month, by source.']), legend(series), cb]));
       requestAnimationFrame(function () { columns(cb, monthItems(ms, function (m) { var o = {}; series.forEach(function (x) { o[x.id] = m.kg[x.id]; }); return o; }), series, { label: sc.name + ' by month' }); });
     }
   }
@@ -359,12 +359,8 @@
     if (typeof v === 'number') return v.toLocaleString('en-IN', { maximumFractionDigits: 3 });
     return String(v);
   }
-  function pageCategory(root, s, id) {
-    var cat = CAT[id], sc = SCOPES[s], ms = selMonths(), sum = sumSel(ms), v = sum.kg[id];
-    put(root, sampleNotice());
-    put(root, h('div', { class: 'crumbs' }, [h('a', { href: '#/' }, ['Overview']), '›', h('a', { href: '#/scope/' + s }, [sc.name]), '›', h('span', null, [cat.label])]));
-    put(root, h('div', { class: 'head' }, [h('div', null, [h('h1', { class: 'pg', style: 'display:flex;align-items:center;gap:10px' }, [h('i', { class: 'sw', style: 'width:14px;height:14px;background:' + cat.c }), cat.label]), h('div', { class: 'hint' }, [cat.desc])]), filters()]));
-    // collect rows
+  function collectCat(id) {
+    var cat = CAT[id];
     var groupsMap = {}, tables = [], nRows = 0;
     cat.mods.forEach(function (mod) {
       var tid = tableOf(mod), t = TBL[tid], rows = S.data[tid] || [], list = [];
@@ -380,6 +376,84 @@
       });
       if (list.length) { tables.push({ t: t, mod: mod, list: list }); nRows += list.length; }
     });
+    return { groupsMap: groupsMap, tables: tables, nRows: nRows };
+  }
+
+  /* ------------------------------------------------------------ chart images (PNG, SVG, ZIP) */
+  function chartMeta() { return { org: META.org, period: periodLabel(), version: XP.VERSION }; }
+  function sub1() { return 'Tonnes CO₂e · ' + periodLabel(); }
+  function specScopes(sum) { return { type: 'split', title: 'Emissions by scope', subtitle: sub1(), items: [1, 2, 3].map(function (s) { return { name: SCOPES[s].name + ' · ' + SCOPES[s].desc, v: sum.t[s], c: SCOPES[s].c }; }), total: sum.total }; }
+  function specScopeMonths(ms) {
+    var series = [1, 2, 3].map(function (s) { return { id: s, name: SCOPES[s].name, c: SCOPES[s].c }; });
+    return { type: 'columns', title: 'Monthly emissions by scope', subtitle: sub1(), series: series, items: monthItems(ms, function (m) { return { 1: m.t[1], 2: m.t[2], 3: m.t[3] }; }) };
+  }
+  function specTopSources(sum) {
+    var items = Object.keys(CAT).map(function (id) { return { name: CAT[id].label, v: sum.kg[id], c: SCOPES[CAT[id].scope].c }; });
+    return { type: 'rank', title: 'Largest emission sources', subtitle: sub1() + ' · coloured by scope', items: items, total: sum.total };
+  }
+  function specScopeCats(s, sum) {
+    return { type: 'split', title: SCOPES[s].name + ' · ' + SCOPES[s].desc + ' by category', subtitle: sub1(), items: SCOPES[s].cats.map(function (id) { return { name: CAT[id].label, v: sum.kg[id], c: CAT[id].c }; }), total: sum.t[s] };
+  }
+  function specScopeMonths2(s, ms, sum) {
+    var series = SCOPES[s].cats.map(function (id) { return { id: id, name: CAT[id].label, c: CAT[id].c }; }).filter(function (x) { return sum.kg[x.id] > 0; });
+    return { type: 'columns', title: SCOPES[s].name + ' monthly emissions by category', subtitle: sub1(), series: series, items: monthItems(ms, function (m) { var o = {}; series.forEach(function (x) { o[x.id] = m.kg[x.id]; }); return o; }) };
+  }
+  function specCatGroups(id, groupsMap) {
+    var items = Object.keys(groupsMap).map(function (k) { return { name: k, v: groupsMap[k], c: CAT[id].c }; });
+    return { type: 'rank', title: CAT[id].label + ' by source', subtitle: sub1(), items: items };
+  }
+  function specCatMonths(id, ms) {
+    return { type: 'columns', title: CAT[id].label + ' monthly emissions', subtitle: sub1(), series: [{ id: id, name: CAT[id].label, c: CAT[id].c }], items: monthItems(ms, function (m) { var o = {}; o[id] = m.kg[id]; return o; }) };
+  }
+  function allSpecs() {
+    var ms = selMonths(), sum = sumSel(ms), out = [];
+    if (!ms.length || sum.total <= 0) return out;
+    out.push({ group: 'Overview', spec: specScopes(sum) }, { group: 'Overview', spec: specScopeMonths(ms) }, { group: 'Overview', spec: specTopSources(sum) });
+    [1, 2, 3].forEach(function (s) {
+      if (sum.t[s] <= 0) return;
+      out.push({ group: SCOPES[s].name, spec: specScopeCats(s, sum) }, { group: SCOPES[s].name, spec: specScopeMonths2(s, ms, sum) });
+      SCOPES[s].cats.forEach(function (id) {
+        if (sum.kg[id] <= 0) return;
+        out.push({ group: SCOPES[s].name, spec: specCatGroups(id, collectCat(id).groupsMap) }, { group: SCOPES[s].name, spec: specCatMonths(id, ms) });
+      });
+    });
+    return out;
+  }
+  function downloadChart(spec, fmt) {
+    var svg = XC.svg(spec, chartMeta()), stem = fileStem() + '_' + XC.slug(spec.title);
+    if (fmt === 'svg') return saveBlob(stem + '.svg', new Blob([svg], { type: 'image/svg+xml' }));
+    XC.toPng(svg, 2, function (err, b) { if (err) alert('Could not create the image: ' + err.message); else saveBlob(stem + '.png', b); });
+  }
+  function chartTools(specFn) {
+    return h('div', { class: 'ct noprint' }, [h('span', { class: 'lb' }, ['Save image']),
+      h('button', { class: 'btn sm', title: 'PNG image for slides and documents', onclick: function () { downloadChart(specFn(), 'png'); } }, ['PNG']),
+      h('button', { class: 'btn sm', title: 'SVG, editable in PowerPoint and design tools', onclick: function () { downloadChart(specFn(), 'svg'); } }, ['SVG'])]);
+  }
+  function downloadAllCharts(fmt) {
+    var list = allSpecs(), files = [], i = 0, meta = chartMeta();
+    function done() { saveBlob(fileStem() + '_charts_' + fmt + '.zip', new Blob([XC.zip(files)], { type: 'application/zip' })); }
+    (function next() {
+      if (i >= list.length) return done();
+      var spec = list[i].spec, svg = XC.svg(spec, meta), nm = String(i + 1).padStart(2, '0') + '_' + XC.slug(spec.title) + '.' + fmt; i++;
+      if (fmt === 'svg') { files.push({ name: nm, data: XC.utf8(svg) }); return next(); }
+      XC.toPng(svg, 2, function (err, b) { if (err) return alert('Could not create the images: ' + err.message); b.arrayBuffer().then(function (buf) { files.push({ name: nm, data: new Uint8Array(buf) }); next(); }); });
+    })();
+  }
+  function chartsCard() {
+    var list = allSpecs();
+    var kids = [h('h2', null, ['Chart images']), h('p', { class: 'sub' }, ['Every chart for ' + periodLabel() + ' as an image for slides, reports and documents. PNG is 2560 × 1440 on a white background. SVG stays editable in PowerPoint and design tools.']),
+      h('div', { class: 'row-btns' }, [h('button', { class: 'btn primary', disabled: !list.length, onclick: function () { downloadAllCharts('png'); } }, ['↓ All charts as PNG (.zip)']),
+        h('button', { class: 'btn', disabled: !list.length, onclick: function () { downloadAllCharts('svg'); } }, ['↓ All charts as SVG (.zip)'])])];
+    if (list.length) kids.push(h('div', { class: 'cl', id: 'chart-list' }, list.map(function (it) { return h('div', { class: 'ci' }, [h('span', null, [h('span', { class: 'k' }, [it.group]), it.spec.title]), chartTools(function () { return it.spec; })]); })));
+    else kids.push(h('p', { class: 'hint', style: 'margin-top:10px' }, ['No data in this period.']));
+    return h('div', { class: 'card mt', id: 'charts-card' }, kids);
+  }
+  function pageCategory(root, s, id) {
+    var cat = CAT[id], sc = SCOPES[s], ms = selMonths(), sum = sumSel(ms), v = sum.kg[id];
+    put(root, sampleNotice());
+    put(root, h('div', { class: 'crumbs' }, [h('a', { href: '#/' }, ['Overview']), '›', h('a', { href: '#/scope/' + s }, [sc.name]), '›', h('span', null, [cat.label])]));
+    put(root, h('div', { class: 'head' }, [h('div', null, [h('h1', { class: 'pg', style: 'display:flex;align-items:center;gap:10px' }, [h('i', { class: 'sw', style: 'width:14px;height:14px;background:' + cat.c }), cat.label]), h('div', { class: 'hint' }, [cat.desc])]), filters()]));
+    var cc = collectCat(id), groupsMap = cc.groupsMap, tables = cc.tables, nRows = cc.nRows;
     var excluded = tables.reduce(function (a, tb) { return a + tb.list.filter(function (x) { return x.iss.some(function (i) { return i.level === 'error'; }); }).length; }, 0);
     put(root, h('div', { class: 'card' }, [h('div', { class: 'kv', style: 'margin-top:0' }, [
       h('div', null, [h('b', { style: 'font-size:30px' }, [fmtT(v / 1000) + ' t']), 'CO₂e · ' + periodLabel()]),
@@ -389,10 +463,10 @@
       excluded ? h('div', null, [h('b', { style: 'color:var(--err)' }, [String(excluded)]), 'excluded']) : null])]));
     var gItems = Object.keys(groupsMap).map(function (k) { return { name: k, v: groupsMap[k], c: cat.c }; }).sort(function (a, b) { return b.v - a.v; });
     var g2 = h('div', { class: 'g2 mt' });
-    g2.appendChild(h('div', { class: 'card' }, [h('h2', null, ['What it is made of']), h('p', { class: 'sub', style: 'margin-bottom:0' }, ['Grouped by ' + ({ fuel: 'fuel', hvac: 'equipment and refrigerant', fire: 'agent', sf6: 'installation year', mobile: 'vehicle', c7: 'mode', elec: 'supply', c1: 'spend category', c2: 'spend category', c3: 'source', c4: 'goods and mode', c5: 'waste type and method', c6: 'mode and route', food: 'food type' }[id] || 'item') + '.']),
+    g2.appendChild(h('div', { class: 'card' }, [gItems.length ? chartTools(function () { return specCatGroups(id, groupsMap); }) : null, h('h2', null, ['What it is made of']), h('p', { class: 'sub', style: 'margin-bottom:0' }, ['Grouped by ' + ({ fuel: 'fuel', hvac: 'equipment and refrigerant', fire: 'agent', sf6: 'installation year', mobile: 'vehicle', c7: 'mode', elec: 'supply', c1: 'spend category', c2: 'spend category', c3: 'source', c4: 'goods and mode', c5: 'waste type and method', c6: 'mode and route', food: 'food type' }[id] || 'item') + '.']),
       gItems.length ? rankList(gItems, v) : h('div', { class: 'empty' }, ['No emissions in this period.'])]));
     var cb = h('div', { class: 'chartbox' });
-    g2.appendChild(h('div', { class: 'card' }, [h('h2', null, ['Month by month']), h('p', { class: 'sub' }, ['Tonnes CO₂e per month.']), cb]));
+    g2.appendChild(h('div', { class: 'card' }, [ms.length ? chartTools(function () { return specCatMonths(id, ms); }) : null, h('h2', null, ['Month by month']), h('p', { class: 'sub' }, ['Tonnes CO₂e per month.']), cb]));
     put(root, g2);
     requestAnimationFrame(function () { var o = {}; columns(cb, monthItems(ms, function (m) { o = {}; o[id] = m.kg[id]; return o; }), [{ id: id, name: cat.label, c: cat.c }], { label: cat.label + ' by month' }); });
     // entries
@@ -473,6 +547,7 @@
       h('div', { class: 'card xc' }, [h('h2', null, ['Excel summary']), h('p', { class: 'sub' }, ['Summary, monthly table, every entry, data quality, method and factor sources. Totals are live formulas.']), h('button', { class: 'btn primary', disabled: !ms.length, onclick: exportXlsx }, ['↓ Download .xlsx'])]),
       h('div', { class: 'card xc' }, [h('h2', null, ['Entries as CSV']), h('p', { class: 'sub' }, ['One line per calculated entry with its category, month and tonnes CO₂e. For your own analysis.']), h('button', { class: 'btn', disabled: !ms.length, onclick: exportCsv }, ['↓ Download .csv'])]),
       h('div', { class: 'card xc' }, [h('h2', null, ['Printable report']), h('p', { class: 'sub' }, ['A clean multi-page view for clients. Print it or save it as PDF from your browser.']), h('a', { class: 'btn', href: '#/report' }, ['Open report ›'])])]));
+    put(root, chartsCard());
     put(root, h('p', { class: 'hint', style: 'margin-top:14px' }, ['Period: ' + periodLabel() + '. Change it above to export a different year.']));
   }
   function repTable(rows, cols) {

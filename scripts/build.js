@@ -15,6 +15,7 @@ const parts = {
   '/*__ENGINE__*/': read('src/engine.js'),
   '/*__SCHEMA__*/': read('src/schema.js'),
   '/*__EXPORT__*/': read('src/export.js'),
+  '/*__CHARTS__*/': read('src/charts.js'),
   '/*__SAMPLE__*/': read('src/sample.js'),
   '/*__APP__*/': read('src/app.js'),
 };

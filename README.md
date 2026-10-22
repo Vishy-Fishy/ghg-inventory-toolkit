@@ -1,5 +1,4 @@
 # GHG Inventory Toolkit
-[![CI](https://github.com/Vishy-Fishy/ghg-inventory-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/Vishy-Fishy/ghg-inventory-toolkit/actions/workflows/ci.yml) [![Licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 
 An open-source calculator for greenhouse gas inventories (Scope 1, 2 and 3), built for organisations in India. You download an Excel template, fill it in, upload it, and get totals with drill-down by scope, category and individual entry. Results export as an Excel summary, a CSV, or a printable report.
 
@@ -14,13 +13,15 @@ Everything runs in your browser. Your data is not sent anywhere.
 - **Template in, results out.** One Excel template with dropdowns for every list field (fuels, vehicles, refrigerants, airports). Upload the filled file and everything is calculated.
 - **Honest about bad rows.** A row that cannot be calculated (missing quantity, unknown category, unit that does not fit) is excluded and listed with its sheet and row number. It is never counted as zero silently.
 - **Export.** Excel summary (live formulas, monthly table, every entry, data quality, method and sources), CSV of entries, and a print-ready report.
+- **Chart images.** Every chart has PNG and SVG buttons, and the Export page downloads all charts for the period as one ZIP. Images are 16:9 on white, ready for slides and reports.
 
 Categories covered: stationary combustion, refrigerant leaks, fire extinguishers, SF₆ circuit breakers, owned vehicles and machinery, purchased electricity (location-based), purchased and capital goods, fuel- and energy-related activities, upstream transport, waste, business travel (road and air), employee commuting, and food.
 
 Not yet covered: downstream transport and leased assets, renewable energy and market-based Scope 2, biogenic emissions, and the other Scope 3 categories. See `docs/ROADMAP.md`.
 
 ## Try it
-Use the hosted copy at https://vishy-fishy.github.io/ghg-inventory-toolkit/, or open `dist/index.html` in a browser after building (below). Click **Explore with sample data** to see it with a made-up organisation, or download a template from the first page.
+
+Open `dist/index.html` in a browser after building (below), or use the hosted copy once GitHub Pages is switched on for this repository. Click **Explore with sample data** to see it with a made-up organisation, or download a template from the first page.
 
 ## Develop
 
@@ -30,7 +31,7 @@ Needs Node 20 or newer.
 npm install
 npm test          # unit tests, hand-calculated checks and regression tests
 npm run build     # writes dist/index.html, one self-contained file
-npm run e2e       # optional browser test of export and report (needs Playwright's Chromium)
+npm run e2e       # optional browser tests of export, report and chart images (needs Playwright's Chromium)
 ```
 
 ## How it is organised
@@ -39,6 +40,7 @@ npm run e2e       # optional browser test of export and report (needs Playwright
 src/engine.js     calculation engine: pure functions, no browser needed
 src/schema.js     input tables, dropdown lists, template builder and reader
 src/export.js     summaries, Excel summary and CSV
+src/charts.js     chart images (SVG, PNG, ZIP)
 src/sample.js     synthetic example inputs (no real organisation)
 src/app.js        the dashboard
 data/             emission factors, airports and the source of each factor
