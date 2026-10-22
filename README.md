@@ -1,4 +1,5 @@
 # GHG Inventory Toolkit
+[![CI](https://github.com/Vishy-Fishy/ghg-inventory-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/Vishy-Fishy/ghg-inventory-toolkit/actions/workflows/ci.yml) [![Licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 
 An open-source calculator for greenhouse gas inventories (Scope 1, 2 and 3), built for organisations in India. You download an Excel template, fill it in, upload it, and get totals with drill-down by scope, category and individual entry. Results export as an Excel summary, a CSV, or a printable report.
 
