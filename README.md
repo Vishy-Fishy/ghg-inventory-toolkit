@@ -22,8 +22,6 @@ Not yet covered: downstream transport and leased assets, renewable energy and ma
 ## Try it
 Use the hosted copy at https://vishy-fishy.github.io/ghg-inventory-toolkit/, or open `dist/index.html` in a browser after building (below). Click **Explore with sample data** to see it with a made-up organisation, or download a template from the first page.
 
-Open `dist/index.html` in a browser after building (below), or use the hosted copy once GitHub Pages is switched on for this repository. Click **Explore with sample data** to see it with a made-up organisation, or download a template from the first page.
-
 ## Develop
 
 Needs Node 20 or newer.
