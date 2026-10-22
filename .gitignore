@@ -1,0 +1,15 @@
+node_modules/
+dist/
+tests/e2e/out/
+.DS_Store
+
+# Never commit real organisation data. Spreadsheets are blocked by default;
+# only the synthetic files in examples/ are allowed.
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+!examples/*.xlsx
+!examples/*.csv
+local/
+private/

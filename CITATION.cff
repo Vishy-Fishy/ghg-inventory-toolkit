@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "GHG Inventory Toolkit"
+type: software
+version: 0.1.0
+date-released: 2026-10-31
+license: MIT
+abstract: >-
+  An open-source greenhouse gas inventory calculator for organisations in India.
+  Fill an Excel template, upload it, and get Scope 1, 2 and 3 results with drill-down
+  and client-ready exports. Calculations run in the browser.
+# TODO before the first release: confirm author order and add ORCID iDs (orcid: "https://orcid.org/...").
+authors:
+  - family-names: Subramanian
+    given-names: Sivaranjani
+    affiliation: "EMC"
+    email: sivaranjani@emcentre.com
+  - family-names: Vishweshvaran
+    given-names: "S C"
+    affiliation: "EMC"
+    email: vishweshvaran@emcentre.com
+  - family-names: Limaye
+    given-names: Gaurav
+    affiliation: "EMC"
+    email: gaurav.limaye@emcentre.com
+repository-code: "https://github.com/Vishy-Fishy/ghg-inventory-toolkit"
+keywords:
+  - greenhouse gas accounting
+  - carbon footprint
+  - GHG Protocol
+  - India
+  - emissions inventory

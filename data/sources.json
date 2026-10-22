@@ -1,0 +1,127 @@
+{
+  "_note": "Source of each factor group. 'status' reflects the independent check against the primary source done on 2026-10-22. Per-factor detail is in data/factor_register.csv (regenerate with `node scripts/make-register.js`).",
+  "version": "0.2.0",
+  "sources": [
+    {
+      "id": "ipcc-stationary",
+      "applies_to": [
+        "fuels (CO2/CH4/N2O per tonne, litre or m3)",
+        "heat values",
+        "densities"
+      ],
+      "title": "2019 Refinement to the 2006 IPCC Guidelines for National GHG Inventories, Vol. 2 Ch. 2 Stationary Combustion; GHG Protocol cross-sector tools",
+      "links": [
+        "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_2_Ch02_Stationary_Combustion.pdf",
+        "https://ghgprotocol.org/calculation-tools-and-guidance#cross_sector_tools_id"
+      ],
+      "licence_note": "IPCC copyright: cite the source; check the IPCC reuse terms before redistributing tables.",
+      "status": "CHECKED 2026-10-22 for Diesel, Petrol, LPG, Natural Gas, CNG and Coal against IPCC 2006 Vol 2 Tables 1.2, 1.4, 2.4. Briquette, densities and upstream (well-to-tank) values have no recorded source: unverified."
+    },
+    {
+      "id": "ipcc-ar6-gwp",
+      "applies_to": [
+        "GWP of CH4 (29.8) and N2O (273)",
+        "refrigerant GWPs",
+        "SF6 GWP",
+        "fire extinguisher gases"
+      ],
+      "title": "IPCC AR6 WGI Chapter 7 Supplementary Material (100-year GWPs); GHG Protocol GWP table (Aug 2024)",
+      "links": [
+        "https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_Chapter_07_Supplementary_Material.pdf",
+        "https://ghgprotocol.org/sites/default/files/2024-08/Global-Warming-Potential-Values%20%28August%202024%29.pdf"
+      ],
+      "licence_note": "IPCC copyright: cite the source. GHG Protocol: cite.",
+      "status": "CHECKED 2026-10-22 against the GHG Protocol GWP table (Aug 2024). Corrected R12 (12,500), R407C (1,907.9) and R410A (2,255.5). Blends are computed from component AR6 values by mass fraction. R600 not in the table: unverified."
+    },
+    {
+      "id": "ipcc-mobile",
+      "applies_to": [
+        "road fuel emission factors (kg/TJ)",
+        "mobile combustion"
+      ],
+      "title": "2006 IPCC Guidelines, Vol. 2 Ch. 3 Mobile Combustion; GHG Protocol cross-sector tools",
+      "links": [
+        "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_3_Ch3_Mobile_Combustion.pdf"
+      ],
+      "licence_note": "IPCC copyright: cite the source.",
+      "status": "PARTLY CHECKED 2026-10-22: CO2 factors and heat values match IPCC 2006 Vol 2 Tables 1.2 and 1.4. CH4 and N2O road factors not checked."
+    },
+    {
+      "id": "cea-grid",
+      "applies_to": [
+        "grid electricity factor (kg CO2/kWh)",
+        "T&D loss share"
+      ],
+      "title": "Central Electricity Authority (India), CO2 Baseline Database for the Indian Power Sector",
+      "links": [
+        "https://cea.nic.in/wp-content/uploads/baseline/2023/01/Approved_report_emission__2021_22.pdf"
+      ],
+      "licence_note": "Government of India publication: confirm reuse terms.",
+      "status": "CHECKED 2026-10-22 against CEA CO2 Baseline Database v20.0 and v21.0. The workbook's 0.823/0.815 matches no published all-India series. The library now uses the CEA all-India weighted average by financial year (FY 2013-14 to FY 2024-25). The old values stay as 'legacy_workbook_calendar'. OPEN: provenance of 0.823, and the T&D values 0.1927 and 0.0172 (no source)."
+    },
+    {
+      "id": "epa-supply-chain",
+      "applies_to": [
+        "spend-based factors for purchased and capital goods (kg CO2e per USD)"
+      ],
+      "title": "US EPA ORD, Supply Chain Greenhouse Gas Emission Factors v1.3 by NAICS-6",
+      "links": [
+        "https://catalog.data.gov/dataset/supply-chain-greenhouse-gas-emission-factors-v1-3-by-naics-6"
+      ],
+      "licence_note": "US federal government work: generally public domain.",
+      "status": "CHECKED 2026-10-22 against EPA v1.3 NAICS_CO2e_USD2022.csv (with-margins column). Corrected wood office furniture (1.24 -> 0.24). NAICS 488390 not reachable: unverified. EPA uses AR5 GWPs; the toolkit uses AR6 elsewhere. OPEN: source and price year of 21.03 INR/USD (PPP) and 27.311 INR/EUR."
+    },
+    {
+      "id": "defra-waste",
+      "applies_to": [
+        "waste disposal factors by material and method (kg CO2e per tonne)"
+      ],
+      "title": "UK DEFRA greenhouse gas conversion factors (waste disposal)",
+      "links": [
+        "https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting"
+      ],
+      "licence_note": "UK Open Government Licence v3.0: attribution required.",
+      "status": "NOT CHECKED. Needs the DEFRA conversion factor file for each year (not reachable from the audit environment). The workbook linked a third-party copy of an older table."
+    },
+    {
+      "id": "india-ghg-road",
+      "applies_to": [
+        "road vehicle emission factors (kg CO2/km) for business travel and commuting",
+        "transport emission factors per EUR (road, rail, sea, air)"
+      ],
+      "title": "India GHG Program: India Specific Road Transport Emission Factors (WRI India, 2015)",
+      "links": [
+        "https://shaktifoundation.in/wp-content/uploads/2017/06/WRI-2015-India-Specific-Road-Transport-Emission-Factors.pdf"
+      ],
+      "licence_note": "Check reuse terms with the India GHG Program / WRI India before redistributing the table.",
+      "status": "CHECKED 2026-10-22: 55 of 56 vehicle factors and the mileage values match the India GHG Program road transport paper. Corrected Small (Petrol) <800 CC to 0.111. Rail factors are not in this paper: unverified. Values are CO2 only. Transport-per-EUR factors have no recorded source."
+    },
+    {
+      "id": "air-travel",
+      "applies_to": [
+        "air travel distance and emission formula",
+        "airport coordinates"
+      ],
+      "title": "ICAO Carbon Emissions Calculator methodology; OpenFlights airport database",
+      "links": [
+        "https://www.icao.int/environmental-protection/Carbonoffset/Pages/default.aspx",
+        "https://openflights.org/data.html"
+      ],
+      "licence_note": "OpenFlights data is under the Open Database Licence (ODbL): attribution and share-alike apply to the database. Only a small hand-typed subset of airports is included so far.",
+      "status": "NOT VERIFIED. The formula constants (0.6044, 1.665) have no recorded derivation, and results look low against published calculators. Airport coordinates looked right but were not compared with the database."
+    },
+    {
+      "id": "india-food",
+      "applies_to": [
+        "food emission factors (g CO2e per kg of diet, vegetarian and non-vegetarian)"
+      ],
+      "title": "Carbon footprints of Indian food items (Journal article); Life Cycle Assessment of three safe drinking-water options in India (MDPI Sustainability 2019, 11(22), 6233)",
+      "links": [
+        "https://www.researchgate.net/publication/223499350_Carbon_footprints_of_Indian_food_items",
+        "https://www.mdpi.com/2071-1050/11/22/6233"
+      ],
+      "licence_note": "Published articles: cite. Check publisher terms before reproducing tables.",
+      "status": "NOT CHECKED. The derivation of the g CO2e per kg constants is not recorded."
+    }
+  ]
+}
