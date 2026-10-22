@@ -5,7 +5,7 @@ An open-source calculator for greenhouse gas inventories (Scope 1, 2 and 3), bui
 
 Everything runs in your browser. Your data is not sent anywhere.
 
-> **Status: early development (v0.1).** The calculation engine reproduces the spreadsheet it was built from, and a first audit of the emission factors against primary sources has been done (`docs/FACTOR_AUDIT.md`, `data/factor_register.csv`). About a third are verified, five were corrected, and the rest are still marked unverified. Treat results as estimates until the open items are closed.
+> **Status: early development (v0.1).** The calculation engine reproduces the spreadsheet it was built from, and a first audit of the emission factors against primary sources has been done (`docs/FACTOR_AUDIT.md`, `data/factor_register.csv`). 144 of 370 factors are verified, 11 were corrected or had their method changed, and the rest are still marked unverified. Treat results as estimates until the open items are closed.
 
 ## What it does
 

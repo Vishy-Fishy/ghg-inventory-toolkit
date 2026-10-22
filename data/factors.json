@@ -1,715 +1,728 @@
 {
- "fuels": {
-  "Briquette": {
-   "co2": 1160,
-   "ch4": 3.48,
-   "n2o": 0.0464,
-   "unit": "kg/tonne",
-   "upstream_kg_per_TJ": 0,
-   "heat_TJ_per_Gg": 11.6,
-   "density": 1
+  "fuels": {
+    "Briquette": {
+      "co2": 1160,
+      "ch4": 3.48,
+      "n2o": 0.0464,
+      "unit": "kg/tonne",
+      "upstream_kg_per_TJ": 0,
+      "heat_TJ_per_Gg": 11.6,
+      "density": 1,
+      "biogenic": true
+    },
+    "Coal": {
+      "co2": 1816.2899999999997,
+      "ch4": 0.189,
+      "n2o": 0.028349999999999997,
+      "unit": "kg/tonne",
+      "upstream_kg_per_TJ": 10400,
+      "heat_TJ_per_Gg": 18.9,
+      "density": 1
+    },
+    "Natural Gas": {
+      "co2": 1.8849600000000002,
+      "ch4": 0.000168,
+      "n2o": 3.3600000000000004e-06,
+      "unit": "kg/m3",
+      "upstream_kg_per_TJ": 2900,
+      "heat_TJ_per_Gg": 48,
+      "density": 0.7
+    },
+    "LPG": {
+      "co2": 2984.63,
+      "ch4": 0.2365,
+      "n2o": 0.00473,
+      "unit": "kg/tonne",
+      "upstream_kg_per_TJ": 8700,
+      "heat_TJ_per_Gg": 47.3,
+      "density": 1
+    },
+    "Diesel": {
+      "co2": 2.676492,
+      "ch4": 0.0003612,
+      "n2o": 2.1672e-05,
+      "unit": "kg/litre",
+      "upstream_kg_per_TJ": 16700,
+      "heat_TJ_per_Gg": 43,
+      "density": 0.84
+    },
+    "Petrol": {
+      "co2": 2.2717926,
+      "ch4": 0.00032782,
+      "n2o": 1.9669199999999998e-05,
+      "unit": "kg/litre",
+      "upstream_kg_per_TJ": 13500,
+      "heat_TJ_per_Gg": 44.3,
+      "density": 0.74
+    },
+    "CNG": {
+      "co2": 1.8849600000000002,
+      "ch4": 0.000168,
+      "n2o": 3.3600000000000004e-06,
+      "unit": "kg/m3",
+      "upstream_kg_per_TJ": 10000,
+      "heat_TJ_per_Gg": 48,
+      "density": 0.7
+    }
   },
-  "Coal": {
-   "co2": 1816.2899999999997,
-   "ch4": 0.189,
-   "n2o": 0.028349999999999997,
-   "unit": "kg/tonne",
-   "upstream_kg_per_TJ": 10400,
-   "heat_TJ_per_Gg": 18.9,
-   "density": 1
+  "gwp_refrigerant": {
+    "R134A": 1530,
+    "R22": 1960,
+    "R407C": 1907.9,
+    "R410A": 2255.5,
+    "R12": 12500,
+    "R23": 14600,
+    "R32": 771,
+    "R41": 135,
+    "R125": 3740,
+    "R134": 1260,
+    "R143": 364,
+    "R143A": 5810,
+    "R152": 21.5,
+    "R152A": 164,
+    "R161": 4.84,
+    "R227EA": 3600,
+    "R236CB": 1350,
+    "R236EA": 1500,
+    "R236FA": 8690,
+    "R245CA": 787,
+    "R245FA": 962,
+    "R365MFC": 914,
+    "R600": 3
   },
-  "Natural Gas": {
-   "co2": 1.8849600000000002,
-   "ch4": 0.000168,
-   "n2o": 0.0000033600000000000004,
-   "unit": "kg/m3",
-   "upstream_kg_per_TJ": 2900,
-   "heat_TJ_per_Gg": 48,
-   "density": 0.7
+  "hvac_leak": {
+    "Unitary AC": 0.1,
+    "Central HVAC": 0.15,
+    "Refrigeration": 0.35,
+    "Water coolers": 0.15
   },
-  "LPG": {
-   "co2": 2984.63,
-   "ch4": 0.2365,
-   "n2o": 0.00473,
-   "unit": "kg/tonne",
-   "upstream_kg_per_TJ": 8700,
-   "heat_TJ_per_Gg": 47.3,
-   "density": 1
+  "hvac_typical_charge_kg": {
+    "Unitary AC": 3.1,
+    "Central HVAC": 120,
+    "Refrigeration": 100,
+    "Water coolers": 6
   },
-  "Diesel": {
-   "co2": 2.676492,
-   "ch4": 0.0003612,
-   "n2o": 0.000021672,
-   "unit": "kg/litre",
-   "upstream_kg_per_TJ": 16700,
-   "heat_TJ_per_Gg": 43,
-   "density": 0.84
+  "sf6_gwp": {
+    "2022": 23500,
+    "2023+": 24300
   },
-  "Petrol": {
-   "co2": 2.2717926,
-   "ch4": 0.00032782,
-   "n2o": 0.000019669199999999998,
-   "unit": "kg/litre",
-   "upstream_kg_per_TJ": 13500,
-   "heat_TJ_per_Gg": 44.3,
-   "density": 0.74
+  "sf6_leak": 0.02,
+  "fire": {
+    "agents": {
+      "Carbon dioxide": 1,
+      "Foam": 0,
+      "DCP Powder": 0
+    },
+    "leak": {
+      "Handheld": 0.035,
+      "Fixed": 0.025
+    }
   },
-  "CNG": {
-   "co2": 1.8849600000000002,
-   "ch4": 0.000168,
-   "n2o": 0.0000033600000000000004,
-   "unit": "kg/m3",
-   "upstream_kg_per_TJ": 10000,
-   "heat_TJ_per_Gg": 48,
-   "density": 0.7
-  }
- },
- "gwp_refrigerant": {
-  "R134A": 1530,
-  "R22": 1960,
-  "R407C": 1907.9,
-  "R410A": 2255.5,
-  "R12": 12500,
-  "R23": 14600,
-  "R32": 771,
-  "R41": 135,
-  "R125": 3740,
-  "R134": 1260,
-  "R143": 364,
-  "R143A": 5810,
-  "R152": 21.5,
-  "R152A": 164,
-  "R161": 4.84,
-  "R227EA": 3600,
-  "R236CB": 1350,
-  "R236EA": 1500,
-  "R236FA": 8690,
-  "R245CA": 787,
-  "R245FA": 962,
-  "R365MFC": 914,
-  "R600": 3
- },
- "hvac_leak": {
-  "Unitary AC": 0.1,
-  "Central HVAC": 0.15,
-  "Refrigeration": 0.005,
-  "Water coolers": 0.005
- },
- "hvac_typical_charge_kg": {
-  "Unitary AC": 3.1,
-  "Central HVAC": 120,
-  "Refrigeration": 100,
-  "Water coolers": 6
- },
- "sf6_gwp": {
-  "2022": 23500,
-  "2023+": 24300
- },
- "sf6_leak": 0.02,
- "fire": {
-  "agents": {
-   "Carbon dioxide": 1,
-   "Foam": 0,
-   "DCP Powder": 0
+  "grid": {
+    "cea_all_india_fy": {
+      "2013": 0.774,
+      "2014": 0.779,
+      "2015": 0.774,
+      "2016": 0.77,
+      "2017": 0.754,
+      "2018": 0.744,
+      "2019": 0.713,
+      "2020": 0.703,
+      "2021": 0.715,
+      "2022": 0.716,
+      "2023": 0.727,
+      "2024": 0.71
+    },
+    "legacy_workbook_calendar": {
+      "2022": 0.815,
+      "2023": 0.823,
+      "2024": 0.823,
+      "2025": 0.823,
+      "2026": 0.823,
+      "2027": 0.823,
+      "2028": 0.823,
+      "2029": 0.823,
+      "2030": 0.823
+    }
   },
-  "leak": {
-   "Handheld": 0.035,
-   "Fixed": 0.025
-  }
- },
- "grid": {
-  "cea_all_india_fy": {
-   "2013": 0.774,
-   "2014": 0.779,
-   "2015": 0.774,
-   "2016": 0.77,
-   "2017": 0.754,
-   "2018": 0.744,
-   "2019": 0.713,
-   "2020": 0.703,
-   "2021": 0.715,
-   "2022": 0.716,
-   "2023": 0.727,
-   "2024": 0.71
+  "td": {
+    "loss_share": 0.1504,
+    "basis": "National aggregate technical and commercial (AT&C) loss of distribution utilities, FY 2024-25 (14th Integrated Rating and Ranking of Power Distribution Utilities, Ministry of Power). Replace with your distribution company's own figure when known.",
+    "legacy": {
+      "loss_share": 0.1927,
+      "ef": 0.0172
+    }
   },
-  "legacy_workbook_calendar": {
-   "2022": 0.815,
-   "2023": 0.823,
-   "2024": 0.823,
-   "2025": 0.823,
-   "2026": 0.823,
-   "2027": 0.823,
-   "2028": 0.823,
-   "2029": 0.823,
-   "2030": 0.823
-  }
- },
- "td": {
-  "loss_share": 0.1927,
-  "ef": 0.0172
- },
- "vehicles": [
-  [
-   "Two Wheeler",
-   "Scooter",
-   "<110 cc",
-   0.0368
+  "vehicles": [
+    [
+      "Two Wheeler",
+      "Scooter",
+      "<110 cc",
+      0.0368
+    ],
+    [
+      "Two Wheeler",
+      "Scooter",
+      "<150 cc",
+      0.0387
+    ],
+    [
+      "Two Wheeler",
+      "Motorcycle",
+      "<100 cc",
+      0.0358
+    ],
+    [
+      "Two Wheeler",
+      "Motorcycle",
+      "<125 cc",
+      0.0319
+    ],
+    [
+      "Two Wheeler",
+      "Motorcycle",
+      "<135 cc",
+      0.0356
+    ],
+    [
+      "Two Wheeler",
+      "Motorcycle",
+      "<200 cc",
+      0.0458
+    ],
+    [
+      "Two Wheeler",
+      "Motorcycle",
+      "<300 cc",
+      0.0595
+    ],
+    [
+      "Two Wheeler",
+      "Motorcycle",
+      "<500 cc",
+      0.0597
+    ],
+    [
+      "Three Wheeler",
+      "Autorickshaw (Petrol)",
+      "NA",
+      0.1135
+    ],
+    [
+      "Three Wheeler",
+      "Autorickshaw (Diesel)",
+      "NA",
+      0.1322
+    ],
+    [
+      "Three Wheeler",
+      "Autorickshaw (CNG)",
+      "NA",
+      0.10768
+    ],
+    [
+      "Passenger Cars",
+      "Small (Petrol)",
+      "<800 CC",
+      0.111
+    ],
+    [
+      "Passenger Cars",
+      "Hatchback (Petrol)",
+      "<1000 CC",
+      0.127
+    ],
+    [
+      "Passenger Cars",
+      "Hatchback (Petrol)",
+      "<1400 CC",
+      0.14
+    ],
+    [
+      "Passenger Cars",
+      "Premium Hatchback (Petrol)",
+      "<1600 CC",
+      0.162
+    ],
+    [
+      "Passenger Cars",
+      "Compact SUV (Petrol)",
+      "<1600 CC",
+      0.166
+    ],
+    [
+      "Passenger Cars",
+      "Gypsy (Petrol)",
+      "1298 CC",
+      0.204
+    ],
+    [
+      "Passenger Cars",
+      "Sedan (Petrol)",
+      "<1400CC",
+      0.153
+    ],
+    [
+      "Passenger Cars",
+      "Sedan (Petrol)",
+      "<1600 CC",
+      0.153
+    ],
+    [
+      "Passenger Cars",
+      "Sedan (Petrol)",
+      "<2000 CC",
+      0.161
+    ],
+    [
+      "Passenger Cars",
+      "Sedan (Petrol)",
+      "<2500 CC",
+      0.176
+    ],
+    [
+      "Passenger Cars",
+      "SUV (Petrol)",
+      "<3000 CC",
+      0.213
+    ],
+    [
+      "Passenger Cars",
+      "MUV (Petrol)",
+      "<2000 CC",
+      0.23
+    ],
+    [
+      "Passenger Cars",
+      "Premium SUV (Petrol)",
+      "<2000 CC",
+      0.208
+    ],
+    [
+      "Passenger Cars",
+      "Premium SUV (Petrol)",
+      "<3000 CC",
+      0.279
+    ],
+    [
+      "Passenger Cars",
+      "Premium SUV (Petrol)",
+      ">3000 CC",
+      0.289
+    ],
+    [
+      "Passenger Cars",
+      "Premium Sedan (Petrol)",
+      "<2000 CC",
+      0.207
+    ],
+    [
+      "Passenger Cars",
+      "Premium Sedan (Petrol)",
+      "<3000 CC",
+      0.209
+    ],
+    [
+      "Passenger Cars",
+      "Premium Sedan (Petrol)",
+      ">3000 CC",
+      0.27
+    ],
+    [
+      "Passenger Cars",
+      "Hybrid (Petrol)",
+      "<2000 CC",
+      0.103
+    ],
+    [
+      "Passenger Cars",
+      "Hatchback (Diesel)",
+      "<1000 CC",
+      0.113
+    ],
+    [
+      "Passenger Cars",
+      "Hatchback (Diesel)",
+      "<1400 CC",
+      0.126
+    ],
+    [
+      "Passenger Cars",
+      "Hatchback (Diesel)",
+      "<1600 CC",
+      0.147
+    ],
+    [
+      "Passenger Cars",
+      "Sedan (Diesel)",
+      "<1400 CC",
+      0.131
+    ],
+    [
+      "Passenger Cars",
+      "Sedan (Diesel)",
+      "<1600 CC",
+      0.141
+    ],
+    [
+      "Passenger Cars",
+      "Sedan (Diesel)",
+      "<2000 CC",
+      0.16
+    ],
+    [
+      "Passenger Cars",
+      "Premium Sedan (Diesel)",
+      "<2000 CC",
+      0.177
+    ],
+    [
+      "Passenger Cars",
+      "Premium Sedan (Diesel)",
+      "<2500 CC",
+      0.163
+    ],
+    [
+      "Passenger Cars",
+      "Premium Sedan (Diesel)",
+      "<3000 CC",
+      0.248
+    ],
+    [
+      "Passenger Cars",
+      "MUV (Diesel)",
+      "<1400 CC",
+      0.157
+    ],
+    [
+      "Passenger Cars",
+      "MUV (Diesel)",
+      "<2500 CC",
+      0.216
+    ],
+    [
+      "Passenger Cars",
+      "Maxi Van",
+      "NA",
+      0.226
+    ],
+    [
+      "Passenger Cars",
+      "SUV (Diesel)",
+      "<2000 CC",
+      0.201
+    ],
+    [
+      "Passenger Cars",
+      "SUV (Diesel)",
+      "<2500 CC",
+      0.21
+    ],
+    [
+      "Passenger Cars",
+      "SUV (Diesel)",
+      "<3000 CC",
+      0.22
+    ],
+    [
+      "Passenger Cars",
+      "Premium SUV (Diesel)",
+      "<2000 CC",
+      0.18
+    ],
+    [
+      "Passenger Cars",
+      "Premium SUV (Diesel)",
+      "<2500 CC",
+      0.215
+    ],
+    [
+      "Passenger Cars",
+      "Premium SUV (Diesel)",
+      "<3000 CC",
+      0.24
+    ],
+    [
+      "Passenger Cars",
+      "Premium SUV (Diesel)",
+      ">3000 CC",
+      0.29
+    ],
+    [
+      "Passenger Cars",
+      "Small (CNG)",
+      "<800 CC",
+      0.068
+    ],
+    [
+      "Mass Transit",
+      "Bus",
+      "NA",
+      0.015161
+    ],
+    [
+      "Mass Transit",
+      "Non Sub-Urban Train",
+      "NA",
+      0.007837
+    ],
+    [
+      "Mass Transit",
+      "Sub-Urban Train",
+      "NA",
+      0.007976
+    ],
+    [
+      "LDV",
+      "LDV",
+      "NA",
+      0.307
+    ],
+    [
+      "MDV",
+      "MDV",
+      "NA",
+      0.5928
+    ],
+    [
+      "HDV",
+      "HDV",
+      "NA",
+      0.7375
+    ]
   ],
-  [
-   "Two Wheeler",
-   "Scooter",
-   "<150 cc",
-   0.0387
-  ],
-  [
-   "Two Wheeler",
-   "Motorcycle",
-   "<100 cc",
-   0.0358
-  ],
-  [
-   "Two Wheeler",
-   "Motorcycle",
-   "<125 cc",
-   0.0319
-  ],
-  [
-   "Two Wheeler",
-   "Motorcycle",
-   "<135 cc",
-   0.0356
-  ],
-  [
-   "Two Wheeler",
-   "Motorcycle",
-   "<200 cc",
-   0.0458
-  ],
-  [
-   "Two Wheeler",
-   "Motorcycle",
-   "<300 cc",
-   0.0595
-  ],
-  [
-   "Two Wheeler",
-   "Motorcycle",
-   "<500 cc",
-   0.0597
-  ],
-  [
-   "Three Wheeler",
-   "Autorickshaw (Petrol)",
-   "NA",
-   0.1135
-  ],
-  [
-   "Three Wheeler",
-   "Autorickshaw (Diesel)",
-   "NA",
-   0.1322
-  ],
-  [
-   "Three Wheeler",
-   "Autorickshaw (CNG)",
-   "NA",
-   0.10768
-  ],
-  [
-   "Passenger Cars",
-   "Small (Petrol)",
-   "<800 CC",
-   0.111
-  ],
-  [
-   "Passenger Cars",
-   "Hatchback (Petrol)",
-   "<1000 CC",
-   0.127
-  ],
-  [
-   "Passenger Cars",
-   "Hatchback (Petrol)",
-   "<1400 CC",
-   0.14
-  ],
-  [
-   "Passenger Cars",
-   "Premium Hatchback (Petrol)",
-   "<1600 CC",
-   0.162
-  ],
-  [
-   "Passenger Cars",
-   "Compact SUV (Petrol)",
-   "<1600 CC",
-   0.166
-  ],
-  [
-   "Passenger Cars",
-   "Gypsy (Petrol)",
-   "1298 CC",
-   0.204
-  ],
-  [
-   "Passenger Cars",
-   "Sedan (Petrol)",
-   "<1400CC",
-   0.153
-  ],
-  [
-   "Passenger Cars",
-   "Sedan (Petrol)",
-   "<1600 CC",
-   0.153
-  ],
-  [
-   "Passenger Cars",
-   "Sedan (Petrol)",
-   "<2000 CC",
-   0.161
-  ],
-  [
-   "Passenger Cars",
-   "Sedan (Petrol)",
-   "<2500 CC",
-   0.176
-  ],
-  [
-   "Passenger Cars",
-   "SUV (Petrol)",
-   "<3000 CC",
-   0.213
-  ],
-  [
-   "Passenger Cars",
-   "MUV (Petrol)",
-   "<2000 CC",
-   0.23
-  ],
-  [
-   "Passenger Cars",
-   "Premium SUV (Petrol)",
-   "<2000 CC",
-   0.208
-  ],
-  [
-   "Passenger Cars",
-   "Premium SUV (Petrol)",
-   "<3000 CC",
-   0.279
-  ],
-  [
-   "Passenger Cars",
-   "Premium SUV (Petrol)",
-   ">3000 CC",
-   0.289
-  ],
-  [
-   "Passenger Cars",
-   "Premium Sedan (Petrol)",
-   "<2000 CC",
-   0.207
-  ],
-  [
-   "Passenger Cars",
-   "Premium Sedan (Petrol)",
-   "<3000 CC",
-   0.209
-  ],
-  [
-   "Passenger Cars",
-   "Premium Sedan (Petrol)",
-   ">3000 CC",
-   0.27
-  ],
-  [
-   "Passenger Cars",
-   "Hybrid (Petrol)",
-   "<2000 CC",
-   0.103
-  ],
-  [
-   "Passenger Cars",
-   "Hatchback (Diesel)",
-   "<1000 CC",
-   0.113
-  ],
-  [
-   "Passenger Cars",
-   "Hatchback (Diesel)",
-   "<1400 CC",
-   0.126
-  ],
-  [
-   "Passenger Cars",
-   "Hatchback (Diesel)",
-   "<1600 CC",
-   0.147
-  ],
-  [
-   "Passenger Cars",
-   "Sedan (Diesel)",
-   "<1400 CC",
-   0.131
-  ],
-  [
-   "Passenger Cars",
-   "Sedan (Diesel)",
-   "<1600 CC",
-   0.141
-  ],
-  [
-   "Passenger Cars",
-   "Sedan (Diesel)",
-   "<2000 CC",
-   0.16
-  ],
-  [
-   "Passenger Cars",
-   "Premium Sedan (Diesel)",
-   "<2000 CC",
-   0.177
-  ],
-  [
-   "Passenger Cars",
-   "Premium Sedan (Diesel)",
-   "<2500 CC",
-   0.163
-  ],
-  [
-   "Passenger Cars",
-   "Premium Sedan (Diesel)",
-   "<3000 CC",
-   0.248
-  ],
-  [
-   "Passenger Cars",
-   "MUV (Diesel)",
-   "<1400 CC",
-   0.157
-  ],
-  [
-   "Passenger Cars",
-   "MUV (Diesel)",
-   "<2500 CC",
-   0.216
-  ],
-  [
-   "Passenger Cars",
-   "Maxi Van",
-   "NA",
-   0.226
-  ],
-  [
-   "Passenger Cars",
-   "SUV (Diesel)",
-   "<2000 CC",
-   0.201
-  ],
-  [
-   "Passenger Cars",
-   "SUV (Diesel)",
-   "<2500 CC",
-   0.21
-  ],
-  [
-   "Passenger Cars",
-   "SUV (Diesel)",
-   "<3000 CC",
-   0.22
-  ],
-  [
-   "Passenger Cars",
-   "Premium SUV (Diesel)",
-   "<2000 CC",
-   0.18
-  ],
-  [
-   "Passenger Cars",
-   "Premium SUV (Diesel)",
-   "<2500 CC",
-   0.215
-  ],
-  [
-   "Passenger Cars",
-   "Premium SUV (Diesel)",
-   "<3000 CC",
-   0.24
-  ],
-  [
-   "Passenger Cars",
-   "Premium SUV (Diesel)",
-   ">3000 CC",
-   0.29
-  ],
-  [
-   "Passenger Cars",
-   "Small (CNG)",
-   "<800 CC",
-   0.068
-  ],
-  [
-   "Mass Transit",
-   "Bus",
-   "NA",
-   0.015161
-  ],
-  [
-   "Mass Transit",
-   "Non Sub-Urban Train",
-   "NA",
-   0.007837
-  ],
-  [
-   "Mass Transit",
-   "Sub-Urban Train",
-   "NA",
-   0.007976
-  ],
-  [
-   "LDV",
-   "LDV",
-   "NA",
-   0.307
-  ],
-  [
-   "MDV",
-   "MDV",
-   "NA",
-   0.5928
-  ],
-  [
-   "HDV",
-   "HDV",
-   "NA",
-   0.7375
+  "road_fuel": {
+    "Petrol": {
+      "density": 0.74,
+      "heat": 44.3,
+      "co2": 69300,
+      "ch4": 33,
+      "n2o": 3.2,
+      "unit": "Litres"
+    },
+    "Diesel": {
+      "density": 0.84,
+      "heat": 43,
+      "co2": 74100,
+      "ch4": 3.9,
+      "n2o": 3.9,
+      "unit": "Litres"
+    },
+    "CNG": {
+      "density": 1,
+      "heat": 48,
+      "co2": 56100,
+      "ch4": 92,
+      "n2o": 3,
+      "unit": "Kg"
+    },
+    "LPG": {
+      "density": 1,
+      "heat": 47.3,
+      "co2": 63100,
+      "ch4": 62,
+      "n2o": 0.2,
+      "unit": "Kg"
+    }
+  },
+  "mileage": {
+    "LDV": 8.58,
+    "MDV": 4.46,
+    "HDV": 3.59
+  },
+  "spend": {
+    "Electronic & Computer Products": 0.058,
+    "Plastics Materials Products, Basic Forms & Shapes Merchant Wholesalers": 0.144,
+    "Rolled Steel Shape Products": 0.36,
+    "Small Electrical Appliances": 0.157,
+    "Telephone Apparatus": 0.096,
+    "Automobiles": 0.24,
+    "Stationery Products": 0.296,
+    "Office Supplies (except Paper)": 0.265,
+    "Office Furniture (except Wood)": 0.24,
+    "Office Furniture (wood)": 0.24,
+    "Metal Household Furniture Products": 0.227,
+    "Other Industrial Machinery Products": 0.185,
+    "Water Supply and Irrigation Systems": 0.578,
+    "Bottled Water Product": 0.214,
+    "Other Support Activities for Water Transportation": 0.162
+  },
+  "transport_per_eur": {
+    "Railway": 0.562502421719819,
+    "Roadway": 0.775641778893162,
+    "Seaway": 1.89866749585272,
+    "Airway": 2.99570253751406
+  },
+  "fx": {
+    "inr_per_usd": 94.47,
+    "inr_per_eur": 106.13,
+    "basis": "Market exchange rates, not purchasing-power parity. ECB euro foreign exchange reference rates for 21 October 2026 (1 USD = 94.47 INR = 0.89015 EUR, so 1 EUR = 106.13 INR), cross-checked against Google/Morningstar on 22 October 2026 (1 INR = 0.0106 USD, 0.0094 EUR). Update the date and values when you run an inventory.",
+    "date": "2026-10-21",
+    "inr_per_usd_ppp": 20.49,
+    "inr_per_usd_ppp_basis": "World Bank PPP conversion factor, India, 2022 (PA.NUS.PPP). Alternative to the market rate; pass as option inrPerUsd.",
+    "legacy": {
+      "inr_per_usd": 21.03,
+      "inr_per_eur": 27.311
+    }
+  },
+  "waste": {
+    "Paper|Recycled open loop": 0,
+    "Paper|Recycled closed loop": 6.41061,
+    "Paper|Incineration": 6.41061,
+    "Paper|compost": 8.88386,
+    "Paper|TSDF/ Landfill": 1164.39015,
+    "Cardboard|Recycled open loop": 0,
+    "Cardboard|Recycled closed loop": 6.41061,
+    "Cardboard|Incineration": 6.41061,
+    "Cardboard|compost": 8.88386,
+    "Cardboard|TSDF/ Landfill": 1164.39015,
+    "Food|Recycled open loop": 0,
+    "Food|Recycled closed loop": 0,
+    "Food|Incineration": 6.41061,
+    "Food|compost": 8.88386,
+    "Food|TSDF/ Landfill": 655.9869,
+    "Metal|Recycled open loop": 6.41061,
+    "Metal|Recycled closed loop": 6.41061,
+    "Metal|Incineration": 6.41061,
+    "Metal|compost": 0,
+    "Metal|TSDF/ Landfill": 8.88386,
+    "Glass|Recycled open loop": 6.41061,
+    "Glass|Recycled closed loop": 6.41061,
+    "Glass|Incineration": 6.41061,
+    "Glass|compost": 0,
+    "Glass|TSDF/ Landfill": 8.88386,
+    "Plastic (Average)|Recycled open loop": 6.41061,
+    "Plastic (Average)|Recycled closed loop": 6.41061,
+    "Plastic (Average)|Incineration": 6.41061,
+    "Plastic (Average)|compost": 0,
+    "Plastic (Average)|TSDF/ Landfill": 8.88386,
+    "Plastic (Film)|Recycled open loop": 6.41061,
+    "Plastic (Film)|Recycled closed loop": 6.41061,
+    "Plastic (Film)|Incineration": 6.41061,
+    "Plastic (Film)|compost": 0,
+    "Plastic (Film)|TSDF/ Landfill": 8.88386,
+    "Plastic (Rigid)|Recycled open loop": 6.41061,
+    "Plastic (Rigid)|Recycled closed loop": 6.41061,
+    "Plastic (Rigid)|Incineration": 6.41061,
+    "Plastic (Rigid)|compost": 0,
+    "Plastic (Rigid)|TSDF/ Landfill": 8.88386,
+    "E-waste|Recycled open loop": 6.41061,
+    "E-waste|Recycled closed loop": 0,
+    "E-waste|Incineration": 6.41061,
+    "E-waste|compost": 0,
+    "E-waste|TSDF/ Landfill": 8.88386,
+    "Wood|Recycled open loop": 0,
+    "Wood|Recycled closed loop": 6.41061,
+    "Wood|Incineration": 6.41061,
+    "Wood|compost": 8.88386,
+    "Wood|TSDF/ Landfill": 925.24423,
+    "Oil|Recycled open loop": 0,
+    "Oil|Recycled closed loop": 6.41061,
+    "Oil|Incineration": 6.41061,
+    "Oil|compost": 0,
+    "Oil|TSDF/ Landfill": 0,
+    "Textile|Recycled open loop": 0,
+    "Textile|Recycled closed loop": 6.41061,
+    "Textile|Incineration": 6.41061,
+    "Textile|compost": 0,
+    "Textile|TSDF/ Landfill": 496.68303,
+    "Rubber|Recycled open loop": 0,
+    "Rubber|Recycled closed loop": 0,
+    "Rubber|Incineration": 0,
+    "Rubber|compost": 0,
+    "Rubber|TSDF/ Landfill": 0.364,
+    "Hazardous|Recycled open loop": 0,
+    "Hazardous|Recycled closed loop": 0,
+    "Hazardous|Incineration": 2.52,
+    "Hazardous|compost": 0,
+    "Hazardous|TSDF/ Landfill": 0,
+    "Garden Waste|Recycled open loop": 0,
+    "Garden Waste|Recycled closed loop": 0,
+    "Garden Waste|Incineration": 0,
+    "Garden Waste|compost": 8.88386,
+    "Garden Waste|TSDF/ Landfill": 646.6
+  },
+  "waste_pre2023": {
+    "Paper|Recycled open loop": 0,
+    "Paper|Recycled closed loop": 21,
+    "Paper|Incineration": 21,
+    "Paper|compost": 21,
+    "Paper|TSDF/ Landfill": 553,
+    "Cardboard|Recycled open loop": 0,
+    "Cardboard|Recycled closed loop": 21,
+    "Cardboard|Incineration": 21,
+    "Cardboard|compost": 21,
+    "Cardboard|TSDF/ Landfill": 553,
+    "Food|Recycled open loop": 0,
+    "Food|Recycled closed loop": 0,
+    "Food|Incineration": 21,
+    "Food|compost": 6,
+    "Food|TSDF/ Landfill": 570,
+    "Metal|Recycled open loop": 0,
+    "Metal|Recycled closed loop": 21,
+    "Metal|Incineration": 21,
+    "Metal|compost": 0,
+    "Metal|TSDF/ Landfill": 21,
+    "Glass|Recycled open loop": 21,
+    "Glass|Recycled closed loop": 21,
+    "Glass|Incineration": 21,
+    "Glass|compost": 0,
+    "Glass|TSDF/ Landfill": 26,
+    "Plastic (Average)|Recycled open loop": 21,
+    "Plastic (Average)|Recycled closed loop": 21,
+    "Plastic (Average)|Incineration": 21,
+    "Plastic (Average)|compost": 0,
+    "Plastic (Average)|TSDF/ Landfill": 34,
+    "Plastic (Film)|Recycled open loop": 21,
+    "Plastic (Film)|Recycled closed loop": 21,
+    "Plastic (Film)|Incineration": 21,
+    "Plastic (Film)|compost": 0,
+    "Plastic (Film)|TSDF/ Landfill": 34,
+    "Plastic (Rigid)|Recycled open loop": 21,
+    "Plastic (Rigid)|Recycled closed loop": 21,
+    "Plastic (Rigid)|Incineration": 21,
+    "Plastic (Rigid)|compost": 0,
+    "Plastic (Rigid)|TSDF/ Landfill": 34,
+    "E-waste|Recycled open loop": 21,
+    "E-waste|Recycled closed loop": 0,
+    "E-waste|Incineration": 21,
+    "E-waste|compost": 0,
+    "E-waste|TSDF/ Landfill": 17,
+    "Wood|Recycled open loop": 0,
+    "Wood|Recycled closed loop": 0,
+    "Wood|Incineration": 10,
+    "Wood|compost": 302,
+    "Wood|TSDF/ Landfill": 0.736,
+    "Oil|Recycled open loop": 6,
+    "Oil|Recycled closed loop": null,
+    "Oil|Incineration": 6,
+    "Oil|compost": 0,
+    "Oil|TSDF/ Landfill": 6,
+    "Textile|Recycled open loop": 0,
+    "Textile|Recycled closed loop": 0,
+    "Textile|Incineration": 129,
+    "Textile|compost": 302,
+    "Textile|TSDF/ Landfill": 0
+  },
+  "food_g_per_kg": {
+    "Veg": 603.967692539953,
+    "Non-Veg": 939.0914318573894
+  },
+  "pg_cat": [
+    "Electronic & Computer Products",
+    "Plastics Materials Products, Basic Forms & Shapes Merchant Wholesalers",
+    "Rolled Steel Shape Products",
+    "Small Electrical Appliances",
+    "Telephone Apparatus",
+    "Automobiles",
+    "Stationery Products",
+    "Office Supplies (except Paper)",
+    "Office Furniture (except Wood)",
+    "Office Furniture (wood)",
+    "Metal Household Furniture Products",
+    "Other Industrial Machinery Products",
+    "Water Supply and Irrigation Systems",
+    "Bottled Water Product",
+    "Other Support Activities for Water Transportation"
   ]
- ],
- "road_fuel": {
-  "Petrol": {
-   "density": 0.74,
-   "heat": 44.3,
-   "co2": 69300,
-   "ch4": 33,
-   "n2o": 3.2,
-   "unit": "Litres"
-  },
-  "Diesel": {
-   "density": 0.84,
-   "heat": 43,
-   "co2": 74100,
-   "ch4": 3.9,
-   "n2o": 3.9,
-   "unit": "Litres"
-  },
-  "CNG": {
-   "density": 1,
-   "heat": 48,
-   "co2": 56100,
-   "ch4": 92,
-   "n2o": 3,
-   "unit": "Kg"
-  },
-  "LPG": {
-   "density": 1,
-   "heat": 47.3,
-   "co2": 63100,
-   "ch4": 62,
-   "n2o": 0.2,
-   "unit": "Kg"
-  }
- },
- "mileage": {
-  "LDV": 8.58,
-  "MDV": 4.46,
-  "HDV": 3.59
- },
- "spend": {
-  "Electronic & Computer Products": 0.058,
-  "Plastics Materials Products, Basic Forms & Shapes Merchant Wholesalers": 0.144,
-  "Rolled Steel Shape Products": 0.36,
-  "Small Electrical Appliances": 0.157,
-  "Telephone Apparatus": 0.096,
-  "Automobiles": 0.24,
-  "Stationery Products": 0.296,
-  "Office Supplies (except Paper)": 0.265,
-  "Office Furniture (except Wood)": 0.24,
-  "Office Furniture (wood)": 0.24,
-  "Metal Household Furniture Products": 0.227,
-  "Other Industrial Machinery Products": 0.185,
-  "Water Supply and Irrigation Systems": 0.578,
-  "Bottled Water Product": 0.214,
-  "Other Support Activities for Water Transportation": 0.162
- },
- "transport_per_eur": {
-  "Railway": 0.562502421719819,
-  "Roadway": 0.775641778893162,
-  "Seaway": 1.89866749585272,
-  "Airway": 2.99570253751406
- },
- "fx": {
-  "inr_per_usd_ppp": 21.03,
-  "inr_per_eur": 27.311
- },
- "waste": {
-  "Paper|Recycled open loop": 0,
-  "Paper|Recycled closed loop": 6.41061,
-  "Paper|Incineration": 6.41061,
-  "Paper|compost": 8.88386,
-  "Paper|TSDF/ Landfill": 1164.39015,
-  "Cardboard|Recycled open loop": 0,
-  "Cardboard|Recycled closed loop": 6.41061,
-  "Cardboard|Incineration": 6.41061,
-  "Cardboard|compost": 8.88386,
-  "Cardboard|TSDF/ Landfill": 1164.39015,
-  "Food|Recycled open loop": 0,
-  "Food|Recycled closed loop": 0,
-  "Food|Incineration": 6.41061,
-  "Food|compost": 8.88386,
-  "Food|TSDF/ Landfill": 655.9869,
-  "Metal|Recycled open loop": 6.41061,
-  "Metal|Recycled closed loop": 6.41061,
-  "Metal|Incineration": 6.41061,
-  "Metal|compost": 0,
-  "Metal|TSDF/ Landfill": 8.88386,
-  "Glass|Recycled open loop": 6.41061,
-  "Glass|Recycled closed loop": 6.41061,
-  "Glass|Incineration": 6.41061,
-  "Glass|compost": 0,
-  "Glass|TSDF/ Landfill": 8.88386,
-  "Plastic (Average)|Recycled open loop": 6.41061,
-  "Plastic (Average)|Recycled closed loop": 6.41061,
-  "Plastic (Average)|Incineration": 6.41061,
-  "Plastic (Average)|compost": 0,
-  "Plastic (Average)|TSDF/ Landfill": 8.88386,
-  "Plastic (Film)|Recycled open loop": 6.41061,
-  "Plastic (Film)|Recycled closed loop": 6.41061,
-  "Plastic (Film)|Incineration": 6.41061,
-  "Plastic (Film)|compost": 0,
-  "Plastic (Film)|TSDF/ Landfill": 8.88386,
-  "Plastic (Rigid)|Recycled open loop": 6.41061,
-  "Plastic (Rigid)|Recycled closed loop": 6.41061,
-  "Plastic (Rigid)|Incineration": 6.41061,
-  "Plastic (Rigid)|compost": 0,
-  "Plastic (Rigid)|TSDF/ Landfill": 8.88386,
-  "E-waste|Recycled open loop": 6.41061,
-  "E-waste|Recycled closed loop": 0,
-  "E-waste|Incineration": 6.41061,
-  "E-waste|compost": 0,
-  "E-waste|TSDF/ Landfill": 8.88386,
-  "Wood|Recycled open loop": 0,
-  "Wood|Recycled closed loop": 6.41061,
-  "Wood|Incineration": 6.41061,
-  "Wood|compost": 8.88386,
-  "Wood|TSDF/ Landfill": 925.24423,
-  "Oil|Recycled open loop": 0,
-  "Oil|Recycled closed loop": 6.41061,
-  "Oil|Incineration": 6.41061,
-  "Oil|compost": 0,
-  "Oil|TSDF/ Landfill": 0,
-  "Textile|Recycled open loop": 0,
-  "Textile|Recycled closed loop": 6.41061,
-  "Textile|Incineration": 6.41061,
-  "Textile|compost": 0,
-  "Textile|TSDF/ Landfill": 496.68303,
-  "Rubber|Recycled open loop": 0,
-  "Rubber|Recycled closed loop": 0,
-  "Rubber|Incineration": 0,
-  "Rubber|compost": 0,
-  "Rubber|TSDF/ Landfill": 0.364,
-  "Hazardous|Recycled open loop": 0,
-  "Hazardous|Recycled closed loop": 0,
-  "Hazardous|Incineration": 2.52,
-  "Hazardous|compost": 0,
-  "Hazardous|TSDF/ Landfill": 0,
-  "Garden Waste|Recycled open loop": 0,
-  "Garden Waste|Recycled closed loop": 0,
-  "Garden Waste|Incineration": 0,
-  "Garden Waste|compost": 8.88386,
-  "Garden Waste|TSDF/ Landfill": 646.6
- },
- "waste_pre2023": {
-  "Paper|Recycled open loop": 0,
-  "Paper|Recycled closed loop": 21,
-  "Paper|Incineration": 21,
-  "Paper|compost": 21,
-  "Paper|TSDF/ Landfill": 553,
-  "Cardboard|Recycled open loop": 0,
-  "Cardboard|Recycled closed loop": 21,
-  "Cardboard|Incineration": 21,
-  "Cardboard|compost": 21,
-  "Cardboard|TSDF/ Landfill": 553,
-  "Food|Recycled open loop": 0,
-  "Food|Recycled closed loop": 0,
-  "Food|Incineration": 21,
-  "Food|compost": 6,
-  "Food|TSDF/ Landfill": 570,
-  "Metal|Recycled open loop": 0,
-  "Metal|Recycled closed loop": 21,
-  "Metal|Incineration": 21,
-  "Metal|compost": 0,
-  "Metal|TSDF/ Landfill": 21,
-  "Glass|Recycled open loop": 21,
-  "Glass|Recycled closed loop": 21,
-  "Glass|Incineration": 21,
-  "Glass|compost": 0,
-  "Glass|TSDF/ Landfill": 26,
-  "Plastic (Average)|Recycled open loop": 21,
-  "Plastic (Average)|Recycled closed loop": 21,
-  "Plastic (Average)|Incineration": 21,
-  "Plastic (Average)|compost": 0,
-  "Plastic (Average)|TSDF/ Landfill": 34,
-  "Plastic (Film)|Recycled open loop": 21,
-  "Plastic (Film)|Recycled closed loop": 21,
-  "Plastic (Film)|Incineration": 21,
-  "Plastic (Film)|compost": 0,
-  "Plastic (Film)|TSDF/ Landfill": 34,
-  "Plastic (Rigid)|Recycled open loop": 21,
-  "Plastic (Rigid)|Recycled closed loop": 21,
-  "Plastic (Rigid)|Incineration": 21,
-  "Plastic (Rigid)|compost": 0,
-  "Plastic (Rigid)|TSDF/ Landfill": 34,
-  "E-waste|Recycled open loop": 21,
-  "E-waste|Recycled closed loop": 0,
-  "E-waste|Incineration": 21,
-  "E-waste|compost": 0,
-  "E-waste|TSDF/ Landfill": 17,
-  "Wood|Recycled open loop": 0,
-  "Wood|Recycled closed loop": 0,
-  "Wood|Incineration": 10,
-  "Wood|compost": 302,
-  "Wood|TSDF/ Landfill": 0.736,
-  "Oil|Recycled open loop": 6,
-  "Oil|Recycled closed loop": null,
-  "Oil|Incineration": 6,
-  "Oil|compost": 0,
-  "Oil|TSDF/ Landfill": 6,
-  "Textile|Recycled open loop": 0,
-  "Textile|Recycled closed loop": 0,
-  "Textile|Incineration": 129,
-  "Textile|compost": 302,
-  "Textile|TSDF/ Landfill": 0
- },
- "food_g_per_kg": {
-  "Veg": 603.967692539953,
-  "Non-Veg": 939.0914318573894
- },
- "pg_cat": [
-  "Electronic & Computer Products",
-  "Plastics Materials Products, Basic Forms & Shapes Merchant Wholesalers",
-  "Rolled Steel Shape Products",
-  "Small Electrical Appliances",
-  "Telephone Apparatus",
-  "Automobiles",
-  "Stationery Products",
-  "Office Supplies (except Paper)",
-  "Office Furniture (except Wood)",
-  "Office Furniture (wood)",
-  "Metal Household Furniture Products",
-  "Other Industrial Machinery Products",
-  "Water Supply and Irrigation Systems",
-  "Bottled Water Product",
-  "Other Support Activities for Water Transportation"
- ]
 }

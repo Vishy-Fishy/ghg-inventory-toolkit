@@ -30,10 +30,11 @@ add('sf6_gwp', '2023 onward', F.sf6_gwp['2023+'], 'kg CO2e per kg', 'ipcc-ar6-gw
 /* ---- fuels */
 Object.keys(F.fuels).forEach((k) => {
   const f = F.fuels[k], bio = k === 'Briquette';
+  const bioNote = 'Biomass fuel: CO2 is biogenic, so the engine reports it separately and leaves it out of Scope 1 (GHG Protocol Scope 3 Standard). The original spreadsheet counted it in Scope 1. CH4 and N2O still count.';
   const ipccOk = ['Diesel', 'Petrol', 'LPG', 'Natural Gas', 'CNG', 'Coal'].indexOf(k) >= 0;
   const st = ipccOk ? 'verified' : 'unverified';
   const loc = { Diesel: 'Gas/Diesel Oil: Tables 1.2, 1.4, 2.4 (commercial/institutional)', Petrol: 'Motor Gasoline: Tables 1.2, 1.4, 2.4', LPG: 'Liquefied Petroleum Gases: Tables 1.2, 1.4, 2.4', 'Natural Gas': 'Natural Gas: Tables 1.2, 1.4, 2.4', CNG: 'Natural Gas: Tables 1.2, 1.4, 2.4', Coal: 'Sub-Bituminous Coal: Tables 1.2, 1.4, 2.4', Briquette: 'Looks like IPCC "other primary solid biomass" (CO2 100,000 kg/TJ, NCV 11.6). Not checked.' }[k];
-  const bioNote = bio ? 'Biomass fuel: its CO2 is biogenic and normally reported outside the scopes. The original spreadsheet counts it in Scope 1.' : '';
+  
   ['co2', 'ch4', 'n2o'].forEach((g) => add('fuel', k + ' ' + g.toUpperCase(), f[g], f.unit.replace('kg/', 'kg per ').replace(' ', ''), 'ipcc-stationary', loc, st, bio && g === 'co2' ? bioNote : (g !== 'co2' && ipccOk ? 'Emission factor is the commercial/institutional default, converted to a per-unit basis with the net calorific value and density.' : '')));
   add('fuel', k + ' heat value', f.heat_TJ_per_Gg, 'TJ/Gg', 'ipcc-stationary', loc, st, k === 'Coal' ? 'IPCC default for sub-bituminous coal. Indian coal usually differs; use measured NCV if known.' : '');
   const dens = { Diesel: 0.84, Petrol: 0.74, 'Natural Gas': 0.7, CNG: 0.7 }[k];
@@ -54,8 +55,11 @@ Object.keys(F.road_fuel).forEach((k) => {
 });
 
 /* ---- leakage rates and charges */
-Object.keys(F.hvac_leak).forEach((k) => add('hvac_leak', k, F.hvac_leak[k], 'share of charge per year', 'none', 'Compare with IPCC 2006 Vol 3 Table 7.9', 'unverified', k === 'Refrigeration' ? 'Looks low next to the usual range for commercial refrigeration. Needs a source and a clear definition of the equipment type.' : 'No source recorded.'));
-Object.keys(F.hvac_typical_charge_kg).forEach((k) => add('hvac_typical_charge', k, F.hvac_typical_charge_kg[k], 'kg per unit', 'none', '', 'unverified', 'No source recorded.'));
+const leakNote = { 'Unitary AC': ['Residential and commercial A/C: 1 to 10%', 'verified', 'Upper end of the range, as IPCC advises for developing countries.'], 'Central HVAC': ['Chillers: 2 to 15%', 'verified', 'Upper end of the range.'], 'Refrigeration': ['Medium and large commercial refrigeration: 10 to 35%', 'corrected', 'Was 0.5%, below every commercial range. Upper end used. If the equipment is industrial refrigeration or cold storage the range is 7 to 25%.'], 'Water coolers': ['Stand-alone commercial: 1 to 15%', 'corrected', 'Was 0.5%, below the range. Upper end used.'] };
+const leakPrev = { Refrigeration: 0.005, 'Water coolers': 0.005 };
+Object.keys(F.hvac_leak).forEach((k) => add('hvac_leak', k, F.hvac_leak[k], 'share of charge per year', 'ipcc-refrigeration', 'IPCC 2019 Refinement Vol 3 Ch 7, Table 7.9: ' + leakNote[k][0], leakNote[k][1], leakNote[k][2], leakPrev[k]));
+const chargeRange = { 'Unitary AC': '0.5 to 100 kg', 'Central HVAC': '10 to 2,000 kg (chillers)', 'Refrigeration': '50 to 2,000 kg (medium and large commercial)', 'Water coolers': '0.2 to 6 kg (stand-alone commercial)' };
+Object.keys(F.hvac_typical_charge_kg).forEach((k) => add('hvac_typical_charge', k, F.hvac_typical_charge_kg[k], 'kg per unit', 'ipcc-refrigeration', 'IPCC 2019 Refinement Vol 3 Ch 7, Table 7.9: charge range ' + chargeRange[k], 'verified', 'Inside the IPCC default range for the matching sub-application.'));
 add('fire', 'handheld leak rate', F.fire.leak.Handheld, 'share per year', 'none', '', 'unverified', 'No source recorded.');
 add('fire', 'fixed leak rate', F.fire.leak.Fixed, 'share per year', 'none', '', 'unverified', 'No source recorded.');
 Object.keys(F.fire.agents).forEach((k) => add('fire', k + ' GWP', F.fire.agents[k], 'kg CO2e per kg', 'ipcc-ar6-gwp', '', k === 'Carbon dioxide' ? 'verified' : 'unverified', k === 'Carbon dioxide' ? '' : 'Treated as zero. Confirm the agent is not a fluorinated gas.'));
@@ -64,8 +68,10 @@ add('sf6', 'annual leak rate', F.sf6_leak, 'share per year', 'none', 'Compare wi
 /* ---- electricity */
 Object.keys(F.grid.cea_all_india_fy).forEach((k) => add('grid_cea', 'FY ' + k + '-' + String((Number(k) + 1) % 100).padStart(2, '0'), F.grid.cea_all_india_fy[k], 'kg CO2 per kWh', 'cea-grid', 'CEA CO2 Baseline Database v21.0 (Nov 2025), Annexure I, all-India weighted average incl. RE', 'verified', k === '2024' ? 'Adjusted for cross-border transfers; captive injection figure is provisional.' : ''));
 Object.keys(F.grid.legacy_workbook_calendar).forEach((k) => add('grid_legacy', k, F.grid.legacy_workbook_calendar[k], 'kg CO2 per kWh', 'cea-grid', 'Value used in the original spreadsheet', 'open', 'Does not match the CEA all-India series (0.703 to 0.727 for FY 2020-21 to 2023-24). Origin unknown: possibly a regional or older value. Kept only so results can be compared with the original spreadsheet.'));
-add('td', 'loss share', F.td.loss_share, 'share of electricity', 'none', '', 'open', 'No source recorded. The spreadsheet also lists a distributor loss of 14.72%.');
-add('td', 'factor applied to lost electricity', F.td.ef, 'kg CO2e per kWh', 'none', '', 'open', 'Labelled "upstream electricity EF" in the spreadsheet. Emissions from electricity lost in transmission are normally the loss share times the grid factor (about 0.7), not 0.017. Method needs a decision.');
+add('td', 'loss share (default)', F.td.loss_share, 'share of electricity', 'pfc-atc-loss', 'Ministry of Power, 14th Integrated Rating and Ranking of Power Distribution Utilities (FY 2024-25), national AT&C loss 15.04%, as reported by T&D India (27 Jan 2026)', 'corrected', 'AT&C loss includes commercial losses, so it is a proxy for physical loss. Replace with the distribution company\'s own figure (option tdLoss) when known. Lost electricity is valued at the grid factor of the same year, as in GHG Protocol Scope 3 Standard Category 3 (T&D losses include combustion emissions).', 0.1927);
+add('td', 'method', 'kWh x loss share x grid factor', 'method', 'ghgp-scope3', 'Scope 3 Standard, Category 3 activity (c)', 'corrected', 'The spreadsheet multiplied by 0.0172 instead of the grid factor. Option tdMethod: "legacy" reproduces it. Upstream (well-to-tank) emissions of generation are not yet included.');
+add('td', 'legacy loss share', F.td.legacy.loss_share, 'share of electricity', 'none', '', 'open', 'Original spreadsheet value; no source found.');
+add('td', 'legacy factor', F.td.legacy.ef, 'kg CO2e per kWh', 'none', '', 'open', 'Original spreadsheet value; no source found. Only used with tdMethod: "legacy".');
 
 /* ---- vehicles by distance */
 const rail = ['Non Sub-Urban Train', 'Sub-Urban Train'];
@@ -80,8 +86,9 @@ Object.keys(F.mileage).forEach((k) => add('mileage', k, F.mileage[k], 'km per li
 const spendUnverified = ['Other Support Activities for Water Transportation'];
 Object.keys(F.spend).forEach((k) => add('spend', k, F.spend[k], 'kg CO2e per 2022 USD', 'epa-supply-chain', 'EPA v1.3 NAICS_CO2e_USD2022.csv, "with margins" column', k === 'Office Furniture (wood)' ? 'corrected' : (spendUnverified.indexOf(k) >= 0 ? 'unverified' : 'verified'), k === 'Office Furniture (wood)' ? 'NAICS 337211 is 0.24. The old 1.24 was a typing error.' : (spendUnverified.indexOf(k) >= 0 ? 'NAICS 488390. Row not reachable in this check.' : 'EPA factors use AR5 GWPs and 2022 US dollars at purchaser prices.'), k === 'Office Furniture (wood)' ? 1.24 : undefined));
 Object.keys(F.transport_per_eur).forEach((k) => add('transport_per_eur', k, F.transport_per_eur[k], 'kg CO2e per EUR', 'none', '', 'unverified', 'No source recorded in the original spreadsheet.'));
-add('fx', 'INR per USD (PPP)', F.fx.inr_per_usd_ppp, 'INR per USD', 'none', '', 'unverified', 'Needs a source (for example World Bank PPP conversion factor) and the price year. EPA factors are in 2022 dollars.');
-add('fx', 'INR per EUR', F.fx.inr_per_eur, 'INR per EUR', 'none', '', 'unverified', 'Needs a source and a date.');
+add('fx', 'INR per USD (market)', F.fx.inr_per_usd, 'INR per USD', 'ecb-fx', 'ECB euro foreign exchange reference rate, 21 Oct 2026 (via Frankfurter): 1 USD = 94.47 INR; cross-checked with Google/Morningstar 22 Oct 2026', 'corrected', 'Market rate on the date of the audit, not a price-year-matched or PPP rate. EPA factors are per 2022 US dollar, so results scale with the rate used. Update the value and date when running an inventory. The spreadsheet used 21.03 (labelled PPP).', F.fx.legacy.inr_per_usd);
+add('fx', 'INR per EUR (market)', F.fx.inr_per_eur, 'INR per EUR', 'ecb-fx', 'ECB reference rates 21 Oct 2026: 94.47 INR and 0.89015 EUR per USD, so 106.13 INR per EUR', 'corrected', 'Market rate on the date of the audit. The spreadsheet used 27.311, which is not an exchange rate. The per-EUR transport factors have no recorded source or price year.', F.fx.legacy.inr_per_eur);
+add('fx', 'INR per USD (PPP, alternative)', F.fx.inr_per_usd_ppp, 'INR per international USD', 'worldbank-ppp', 'World Bank indicator PA.NUS.PPP, India, 2022', 'verified', 'Not used by default. Pass as option inrPerUsd to compare. About 4.6 times lower than the market rate, so spend-based results are about 4.6 times higher with PPP.');
 
 /* ---- waste */
 Object.keys(F.waste).forEach((k) => add('waste', k, F.waste[k], 'kg CO2e per tonne', 'defra-waste', 'Needs the DEFRA conversion factor file for the matching year', 'unverified', 'The original spreadsheet linked a third-party copy of an older table.'));

@@ -4,7 +4,7 @@ Checked on 22 October 2026 against primary sources, for use as the data layer of
 
 Statuses used in the register: **verified** (matches the primary source), **corrected** (was wrong, now fixed), **unverified** (no recorded source or source not reached), **open** (a decision is needed, not just a check).
 
-Result: 367 factors, 137 verified, 5 corrected, 213 unverified, 12 open.
+Result: 370 factors, 144 verified, 11 corrected, 203 unverified, 12 open. A second pass on the same day settled the T&D method, biogenic CO2, the INR/USD constant and the refrigerant leak rates.
 
 ## Corrected
 | Factor | Was | Now | Why |
@@ -15,6 +15,11 @@ Result: 367 factors, 137 verified, 5 corrected, 213 unverified, 12 open.
 | Wood office furniture (spend) | 1.24 | 0.24 | EPA NAICS 337211; the old value was a typing error |
 | Small petrol car under 800 CC | 0.1093 | 0.111 | India GHG Program road paper |
 | Grid electricity | 0.823 (all years from 2023) | CEA all-India weighted average by financial year | See below |
+| T&D losses (Category 3) | kWh × 0.1927 × 0.0172 | kWh × 0.1504 × grid factor | Lost electricity is valued at the grid factor (GHG Protocol Scope 3 Standard, Category 3). Default loss share is the national AT&C loss for FY 2024-25 (15.04%); users should enter their distribution company's figure. Option `tdMethod: 'legacy'` reproduces the spreadsheet. |
+| Biogenic CO2 (briquettes) | In Scope 1 | Reported separately, outside the scopes | GHG Protocol: biogenic CO2 shall not be included in the scopes. CH4 and N2O still count. Returned by the engine as `biogenic`. |
+| INR per USD and INR per EUR | 21.03 (labelled PPP) and 27.311 | 94.47 and 106.13 (market rates) | ECB reference rates for 21 Oct 2026 (1 USD = 94.47 INR = 0.89015 EUR), cross-checked with Google/Morningstar on 22 Oct 2026. The World Bank PPP value for 2022 (20.49) stays in the library as an alternative: pass `inrPerUsd: 20.49`. |
+| Leak rate, Refrigeration | 0.5% | 35% | IPCC Table 7.9: medium and large commercial refrigeration is 10 to 35%. Upper end used, as for developing countries. |
+| Leak rate, Water coolers | 0.5% | 15% | IPCC Table 7.9: stand-alone commercial is 1 to 15%. |
 
 ## Grid electricity
 The spreadsheet used 0.815 for 2022 and 0.823 for every later year. No published CEA all-India series contains these numbers. The library now uses the CEA CO2 Baseline Database (v20.0 and v21.0), all-India weighted average including renewables, by financial year:
@@ -31,17 +36,16 @@ For a financial year CEA has not yet published, the engine uses the latest publi
 - Spend-based factors against EPA Supply Chain GHG Emission Factors v1.3 (NAICS-6, 2022 USD, with margins).
 
 ## Open: needs a decision or a source
-1. **Provenance of 0.823.** Ask whoever built the spreadsheet where it came from. It may be a regional figure or an older edition.
-2. **Transmission and distribution losses.** The spreadsheet computes kWh × 0.1927 × 0.0172. The 0.0172 is labelled "upstream electricity EF" and neither number has a source. The usual method for lost electricity is loss share × grid factor (about 0.7 kg/kWh), which is roughly 40 times larger. The same sheet lists a distributor loss of 14.72%. The library keeps the spreadsheet method for now and flags it. Pick a method and a source before relying on Category 3 electricity.
-3. **Biogenic CO2 from briquettes.** Counted in Scope 1 in the spreadsheet. Under the GHG Protocol it is reported separately, outside the scopes.
-4. **Air travel formula.** distance^0.6044 × 1.665 has no recorded derivation. Mumbai to London one way in economy gives about 360 kg CO2, which looks low against published calculators.
-5. **Spend-to-USD and spend-to-EUR constants** (21.03 and 27.311): no source or price year. EPA factors are in 2022 US dollars, so the conversion year matters.
+1. **Provenance of 0.823.** Low priority now that the library uses the CEA series. Only matters for comparing with the old spreadsheet.
+2. **T&D loss share.** The default (15.04%) is a national figure read from a news report of the Ministry of Power rating report. AT&C loss includes commercial losses, so it is a proxy for physical loss. Check it against the report itself, and use the distribution company's own figure for real inventories. Well-to-tank emissions of generation are not yet added.
+3. **Refrigeration equipment type.** The 35% leak rate assumes medium or large commercial refrigeration. If the equipment is industrial refrigeration or cold storage (7 to 25%), a lower value is right. Ask what the equipment is.
+4. **Air travel formula.** distance^0.6044 × 1.665 has no recorded derivation. Mumbai to London one way in economy gives about 360 kg CO2, which looks low against published calculators. Best fix is to replace it with the DEFRA passenger-km factors by distance band and class.
+5. **Exchange rates are market rates of one day** and the EPA factors are per 2022 US dollar, so the two do not share a price year. Spend-based results scale directly with the rate: with the 2022 PPP factor (20.49) they would be about 4.6 times higher. Record the rate date in every inventory and update the values in `data/factors.json`. The per-EUR transport factors have no recorded source.
 6. **EPA factors use AR5 GWPs** while the rest of the library uses AR6. Differences are small for most sectors but should be noted in any paper.
 7. **India road factors are CO2 only.** The paper's heavy-duty vehicle figure is also inconsistent (0.7375 in the table, 0.7353 in the worked example).
 
 ## Not verified (no source recorded or source not reachable)
-- Waste factors (current and pre-2023 tables): need the DEFRA conversion factor files.
-- Refrigerant and equipment leak rates and typical charges. "Refrigeration 0.5%" looks low. Compare with IPCC 2006 Vol 3 Table 7.9.
+- Waste factors (current and pre-2023 tables): need the DEFRA conversion factor files, which are spreadsheets and could not be read from the audit environment. Download the DEFRA flat file for the matching year and add it next to the register.
 - Fire extinguisher leak rates (3.5% handheld, 2.5% fixed) and SF6 leak rate (2%).
 - Fuel densities and upstream (well-to-tank) factors. Natural gas (2,900 kg/TJ) and CNG (10,000 kg/TJ) differ though both are natural gas.
 - Briquette factors, rail factors, water transport per EUR (0.162), NAICS 488390, R600 GWP, road CH4 and N2O factors, food factors, airport coordinates.

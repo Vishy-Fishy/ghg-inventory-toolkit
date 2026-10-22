@@ -8,14 +8,13 @@ This tool began as a re-implementation of an Excel toolkit. Comparing the two mo
 3. **A trailing space in a material name made its waste factor silently zero.** Lookups here ignore leading and trailing spaces, and the factor table has been cleaned.
 
 ## Emission factors
-A first audit against primary sources was done on 22 October 2026. See `docs/FACTOR_AUDIT.md` and `data/factor_register.csv`. Five factors were corrected and the grid factor now follows the CEA series by financial year.
+A first audit against primary sources was done on 22 October 2026. See `docs/FACTOR_AUDIT.md` and `data/factor_register.csv`. Ten factors or methods were corrected: refrigerant GWPs, wood furniture, one car factor, the grid factor (CEA by financial year), the T&D method, biogenic CO2, exchange rates and two leak rates.
 
 ## Open items
 - **Grid factor provenance.** The spreadsheet's 0.823 matches no published CEA series. Kept only as the `legacy` option.
-- **Transmission and distribution losses.** The method (kWh × 0.1927 × 0.0172) is unsourced and probably far too small. Needs a decision.
-- **Biogenic CO2** from briquettes is counted in Scope 1; normally it is reported separately.
-- **213 of 367 factors are still unverified**, including waste (needs DEFRA files), leak rates, upstream fuel factors, food, rail and the air-travel formula.
-- **Spend-based conversion constants** (INR per USD at purchasing-power parity, INR per EUR) have no documented source or price year.
+- **T&D loss share** is a national proxy (AT&C 15.04%, FY 2024-25). Use your distribution company's figure.
+- **203 of 370 factors are still unverified**: waste (needs DEFRA files), fire and SF6 leak rates, upstream fuel factors, fuel densities, food, rail, the per-EUR transport factors and the air-travel formula. See `data/factor_register.csv`.
+- **Exchange rates** are the market rates of 21-22 Oct 2026 (94.47 INR per USD, 106.13 INR per EUR). EPA factors are per 2022 USD, so the price years differ. Update `data/factors.json` for each inventory. The 2022 PPP factor is available as an option.
 - **A few constants are written into the engine** rather than the factor library (diesel properties used for waste transport, road-fuel gas factors). They should move to `data/factors.json` with sources.
 - **Missing categories:** downstream transport, leased assets, renewable energy and market-based Scope 2, biogenic emissions, other Scope 3 categories.
 - **Upload limits:** the template reader matches sheets by name, so renaming sheets breaks the import.

@@ -52,7 +52,8 @@
   function compute(data, F, opts) {
     opts = opts || {};
     var rows = [], issues = [];
-    var C = Object.assign({ tdLoss: F.td.loss_share, tdEf: F.td.ef, gridSet: 'cea' }, opts); // gridSet: 'cea' (default) or 'legacy' to reproduce the original spreadsheet
+    var C = Object.assign({ tdLoss: F.td.loss_share, gridSet: 'cea', tdMethod: 'ghgp', inrPerUsd: F.fx.inr_per_usd, inrPerEur: F.fx.inr_per_eur }, opts); // gridSet: 'cea' (default) or 'legacy'; tdMethod: 'ghgp' (default) or 'legacy'; both legacy options reproduce the original spreadsheet
+    var biogenic = { kg: 0, rows: [] }; // biogenic CO2: reported separately, never added to a scope (GHG Protocol)
 
     function ctx(module, idx, r, sheet) {
       var mi = monthIndex(r.month), y = Number(r.year);
@@ -93,8 +94,9 @@
       else if (unit === 'scm') { if (!gas) { issue(c, 'error', 'Unit "SCM" does not suit ' + r.fuel + '. Row excluded.'); return; } qty = q; }
       else { issue(c, 'error', 'Unit "' + r.unit + '" is not recognised. Row excluded.'); return; }
       if (f.unit === 'kg/tonne') massKg = qty * 1000; else massKg = qty * f.density; // kg/litre and kg/m3 both use density in kg per unit
-      var direct = qty * co2e(f.co2, f.ch4, f.n2o);
-      add(c, 'fuel', direct, r.fuel + ' ' + r.qty + ' ' + r.unit, r.note || '');
+      var direct = qty * co2e(f.biogenic ? 0 : f.co2, f.ch4, f.n2o);
+      if (f.biogenic) { var bio = qty * f.co2; biogenic.kg += bio; biogenic.rows.push({ y: c.y, mi: c.mi, fy: fyOf(c.y, c.mi), kg: bio, label: r.fuel + ' ' + r.qty + ' ' + r.unit, row: c.idx + 1 }); }
+      add(c, 'fuel', direct, r.fuel + ' ' + r.qty + ' ' + r.unit, f.biogenic ? 'biogenic CO2 reported separately; only CH4 and N2O counted' : (r.note || ''));
       var tj = massKg / 1e6 * f.heat_TJ_per_Gg;
       add(c, 'c3', tj * f.upstream_kg_per_TJ, 'Upstream of ' + r.fuel, 'well-to-tank');
     });
@@ -195,7 +197,8 @@
         if (ef === undefined) { var last = yrs[yrs.length - 1]; ef = series[String(last)]; issue(c, 'warn', 'CEA has not published a grid factor for FY ' + fy + '-' + String((fy + 1) % 100).padStart(2, '0') + ' yet, so the FY ' + last + '-' + String((last + 1) % 100).padStart(2, '0') + ' value (' + ef + ') is used.'); }
       }
       add(c, 'elec', kwh * ef, kwh.toLocaleString('en-IN') + ' kWh', 'grid factor ' + ef);
-      add(c, 'c3', kwh * C.tdLoss * C.tdEf, 'T&D losses', 'loss share ' + C.tdLoss + ' x factor ' + C.tdEf);
+      if (C.tdMethod === 'legacy') add(c, 'c3', kwh * F.td.legacy.loss_share * F.td.legacy.ef, 'T&D losses', 'loss share ' + F.td.legacy.loss_share + ' x factor ' + F.td.legacy.ef + ' (original spreadsheet method)');
+      else add(c, 'c3', kwh * C.tdLoss * ef, 'T&D losses', 'loss share ' + C.tdLoss + ' x grid factor ' + ef);
     });
 
     /* ---------- spend-based: purchased and capital goods ---------- */
@@ -205,14 +208,14 @@
         var cost = needNum(c, r, 'cost', 'Cost', true); if (cost === null) return;
         var ef = lookupCI(F.spend, r.category);
         if (ef === undefined) { issue(c, 'error', 'Spend category "' + (r.category || '(blank)') + '" is not in the library. Row excluded.'); return; }
-        var usd = cost / F.fx.inr_per_usd_ppp;
+        var usd = cost / C.inrPerUsd;
         add(c, cat, usd * ef, r.item || r.category, 'INR ' + cost.toLocaleString('en-IN'));
         var ts = needNum(c, r, 'transportSpend', 'Transport spend');
         if (ts === null) return;
         if (ts > 0) {
           var mf = lookupCI(F.transport_per_eur, r.mode);
           if (mf === undefined) { issue(c, 'error', 'Transport spend given but mode "' + (r.mode || '(blank)') + '" is not recognised. Transport excluded.'); return; }
-          add(c, 'c4', ts / F.fx.inr_per_eur * mf, 'Transport of ' + (r.item || r.category), r.mode);
+          add(c, 'c4', ts / C.inrPerEur * mf, 'Transport of ' + (r.item || r.category), r.mode);
         }
       });
     }
@@ -297,7 +300,7 @@
     });
 
     var errors = issues.filter(function (x) { return x.level === 'error'; }).length;
-    return { rows: rows, issues: issues, months: months, calendar: calendar, fiscal: fiscal, cats: CATS, errors: errors, warnings: issues.length - errors, MONTHS: MONTHS };
+    return { rows: rows, issues: issues, months: months, calendar: calendar, fiscal: fiscal, cats: CATS, errors: errors, warnings: issues.length - errors, MONTHS: MONTHS, biogenic: biogenic };
   }
 
   var api = { compute: compute, CATS: CATS, MONTHS: MONTHS, monthIndex: monthIndex, fyOf: fyOf };

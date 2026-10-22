@@ -1,6 +1,6 @@
 {
   "_note": "Source of each factor group. 'status' reflects the independent check against the primary source done on 2026-10-22. Per-factor detail is in data/factor_register.csv (regenerate with `node scripts/make-register.js`).",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "sources": [
     {
       "id": "ipcc-stationary",
@@ -57,7 +57,7 @@
         "https://cea.nic.in/wp-content/uploads/baseline/2023/01/Approved_report_emission__2021_22.pdf"
       ],
       "licence_note": "Government of India publication: confirm reuse terms.",
-      "status": "CHECKED 2026-10-22 against CEA CO2 Baseline Database v20.0 and v21.0. The workbook's 0.823/0.815 matches no published all-India series. The library now uses the CEA all-India weighted average by financial year (FY 2013-14 to FY 2024-25). The old values stay as 'legacy_workbook_calendar'. OPEN: provenance of 0.823, and the T&D values 0.1927 and 0.0172 (no source)."
+      "status": "CHECKED 2026-10-22 against CEA CO2 Baseline Database v20.0 and v21.0. The workbook's 0.823/0.815 matches no published all-India series. The library now uses the CEA all-India weighted average by financial year (FY 2013-14 to FY 2024-25). The old values stay as 'legacy_workbook_calendar'. OPEN (low priority): provenance of 0.823. T&D now follows the GHG Protocol method with a sourced default loss share (see pfc-atc-loss)."
     },
     {
       "id": "epa-supply-chain",
@@ -69,7 +69,7 @@
         "https://catalog.data.gov/dataset/supply-chain-greenhouse-gas-emission-factors-v1-3-by-naics-6"
       ],
       "licence_note": "US federal government work: generally public domain.",
-      "status": "CHECKED 2026-10-22 against EPA v1.3 NAICS_CO2e_USD2022.csv (with-margins column). Corrected wood office furniture (1.24 -> 0.24). NAICS 488390 not reachable: unverified. EPA uses AR5 GWPs; the toolkit uses AR6 elsewhere. OPEN: source and price year of 21.03 INR/USD (PPP) and 27.311 INR/EUR."
+      "status": "CHECKED 2026-10-22 against EPA v1.3 NAICS_CO2e_USD2022.csv (with-margins column). Corrected wood office furniture (1.24 -> 0.24). NAICS 488390 not reachable: unverified. EPA uses AR5 GWPs; the toolkit uses AR6 elsewhere. INR/USD and INR/EUR now use market exchange rates of 21-22 Oct 2026 (ecb-fx). The EPA factors are per 2022 US dollar, so this mixes price years; document the rate date in every inventory."
     },
     {
       "id": "defra-waste",
@@ -122,6 +122,67 @@
       ],
       "licence_note": "Published articles: cite. Check publisher terms before reproducing tables.",
       "status": "NOT CHECKED. The derivation of the g CO2e per kg constants is not recorded."
+    },
+    {
+      "id": "ghgp-scope3",
+      "applies_to": [
+        "method for T&D losses (Category 3)",
+        "biogenic CO2 reported outside the scopes"
+      ],
+      "title": "GHG Protocol Corporate Value Chain (Scope 3) Accounting and Reporting Standard",
+      "links": [
+        "https://ghgprotocol.org/standards/scope-3-standard"
+      ],
+      "licence_note": "Cite the standard.",
+      "status": "CHECKED 2026-10-22: Category 3 activity (c) covers T&D losses including combustion emissions; biogenic CO2 shall be reported separately and not included in the scopes."
+    },
+    {
+      "id": "pfc-atc-loss",
+      "applies_to": [
+        "default electricity loss share (national AT&C loss, FY 2024-25: 15.04%)"
+      ],
+      "title": "14th Integrated Rating and Ranking of Power Distribution Utilities, Ministry of Power / PFC (as reported by T&D India, 27 Jan 2026)",
+      "links": [
+        "https://www.tndindia.com/overall-atc-losses-of-distribution-utilities-improve-to-15-04-per-cent-in-fy25/amp/"
+      ],
+      "licence_note": "Cite the report. Read via a news report, not the report itself.",
+      "status": "CHECKED against a secondary report on 2026-10-22. Check against the report itself. AT&C includes commercial losses, so it is a proxy for physical loss; users should replace it with their distribution company's own figure."
+    },
+    {
+      "id": "worldbank-ppp",
+      "applies_to": [
+        "alternative INR per USD conversion (PPP), not used by default"
+      ],
+      "title": "World Bank, PPP conversion factor, GDP (LCU per international $), indicator PA.NUS.PPP, India",
+      "links": [
+        "https://data.worldbank.org/indicator/PA.NUS.PPP?locations=IN"
+      ],
+      "licence_note": "CC BY 4.0.",
+      "status": "CHECKED 2026-10-22: 2022 = 20.49. Available as an option."
+    },
+    {
+      "id": "ipcc-refrigeration",
+      "applies_to": [
+        "refrigerant leak rates and typical charges by equipment type"
+      ],
+      "title": "2019 Refinement to the 2006 IPCC Guidelines, Vol 3 Ch 7, Table 7.9",
+      "links": [
+        "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/3_Volume3/19R_V3_Ch07_ODS_Substitutes.pdf"
+      ],
+      "licence_note": "IPCC copyright: cite the source.",
+      "status": "CHECKED 2026-10-22. Refrigeration and Water coolers rates corrected to the upper end of the IPCC range (developing-country end). Fire extinguisher and SF6 leak rates are not covered by this table: unverified."
+    },
+    {
+      "id": "ecb-fx",
+      "applies_to": [
+        "INR per USD and INR per EUR for spend-based factors"
+      ],
+      "title": "ECB euro foreign exchange reference rates (via Frankfurter), 21 October 2026; cross-check Google/Morningstar 22 October 2026",
+      "links": [
+        "https://api.frankfurter.dev/v1/2026-10-22?base=USD&symbols=INR,EUR"
+      ],
+      "licence_note": "ECB reference rates may be reused with attribution.",
+      "status": "CHECKED 2026-10-22: 1 USD = 94.47 INR, 1 USD = 0.89015 EUR (so 1 EUR = 106.13 INR). Google/Morningstar showed 1 INR = 0.0106 USD and 0.0094 EUR."
     }
   ]
 }

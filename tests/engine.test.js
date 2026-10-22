@@ -36,7 +36,7 @@ test('electricity: CEA all-India factor for the financial year, T&D losses in Sc
   d.electricity.push({ ...A('April', 2024), kwh: 50000 });  // FY 2024-25 -> 0.710
   const R = E.compute(d, F);
   near(sumCat(R, 'elec'), 50000 * 0.727 * 2 + 50000 * 0.710, 'grid');
-  near(sumCat(R, 'c3'), 3 * 50000 * 0.1927 * 0.0172, 'T&D'); // loss share x factor (see docs/FACTOR_AUDIT.md: method under review)
+  near(sumCat(R, 'c3'), 50000 * 0.1504 * (0.727 * 2 + 0.710), 'T&D'); // lost electricity valued at the grid factor (GHG Protocol Scope 3 Category 3)
   assert.equal(R.issues.length, 0);
 });
 
@@ -72,10 +72,10 @@ test('fire extinguishers: CO2 only, discharged units plus leakage of the rest', 
   near(sumCat(R, 'fire'), 1 * (1 * 4.5 + 9 * 0.035 * 4.5), 'fire');
 });
 
-test('purchased goods: INR to USD at the PPP factor, times the supply-chain factor', () => {
+test('purchased goods: INR to USD at the market rate, times the supply-chain factor', () => {
   const d = empty(); d.purchased.push({ ...A('April', 2025), item: 'Water', category: 'Bottled Water Product', cost: 100000 });
   const R = E.compute(d, F);
-  near(sumCat(R, 'c1'), 100000 / 21.03 * 0.214, 'c1');
+  near(sumCat(R, 'c1'), 100000 / 94.47 * 0.214, 'c1');
 });
 
 test('waste: tonnes x disposal factor', () => {
@@ -114,7 +114,7 @@ test('defect 2: one bad row must not blank the whole month', () => {
   d.purchased.push({ ...A('October', 2024), item: 'Tanker water', category: 'Bottled Water Product', cost: 275000, mode: 'Roadway' });
   d.purchased.push({ ...A('October', 2024), item: 'Chemicals', category: null, cost: 6200, mode: 'Roadway' }); // no category
   const R = E.compute(d, F);
-  near(sumCat(R, 'c1'), 275000 / 21.03 * 0.214, 'good row still counted');
+  near(sumCat(R, 'c1'), 275000 / 94.47 * 0.214, 'good row still counted');
   assert.equal(R.errors, 1);
   assert.ok(/category/i.test(R.issues[0].msg), 'the bad row is named in the issue list');
 });
@@ -122,7 +122,7 @@ test('defect 2: one bad row must not blank the whole month', () => {
 test('defect 2b: a cost typed as text with a line break is read as a number and flagged', () => {
   const d = empty(); d.purchased.push({ ...A('November', 2024), item: 'Tanker water', category: 'Bottled Water Product', cost: '312400\n' });
   const R = E.compute(d, F);
-  near(sumCat(R, 'c1'), 312400 / 21.03 * 0.214, 'text number');
+  near(sumCat(R, 'c1'), 312400 / 94.47 * 0.214, 'text number');
   assert.equal(R.issues.length, 1); assert.equal(R.issues[0].level, 'warn');
 });
 
@@ -163,4 +163,23 @@ test('template round trip: download, fill, upload gives the same results', async
   const a = E.compute(data, F), b = E.compute(parsed.tables, F);
   assert.equal(b.issues.length, 0);
   near(b.months.reduce((s, m) => s + m.total, 0), a.months.reduce((s, m) => s + m.total, 0), 'total after round trip');
+});
+
+test('T&D losses: the original spreadsheet method is available as an option', () => {
+  const d = empty(); d.electricity.push({ ...A('May', 2023), kwh: 50000 });
+  near(sumCat(E.compute(d, F, { tdMethod: 'legacy' }), 'c3'), 50000 * 0.1927 * 0.0172, 'legacy T&D');
+  near(sumCat(E.compute(d, F, { tdLoss: 0.1472 }), 'c3'), 50000 * 0.1472 * 0.727, 'own loss share');
+});
+
+test('biogenic CO2 from briquettes is reported separately and left out of Scope 1', () => {
+  const d = empty(); d.fuel.push({ ...A('April', 2025), fuel: 'Briquette', unit: 'Tonnes', qty: 10 });
+  const R = E.compute(d, F);
+  near(R.biogenic.kg, 10 * 1160, 'biogenic CO2');
+  near(sumCat(R, 'fuel'), 10 * (3.48 * GWP_CH4 + 0.0464 * GWP_N2O), 'only CH4 and N2O in Scope 1');
+});
+
+test('spend conversion: the exchange rate can be overridden, for example with the PPP factor', () => {
+  const d = empty(); d.purchased.push({ ...A('April', 2025), item: 'Water', category: 'Bottled Water Product', cost: 100000 });
+  near(sumCat(E.compute(d, F, { inrPerUsd: F.fx.inr_per_usd_ppp }), 'c1'), 100000 / 20.49 * 0.214, 'PPP override');
+  assert.equal(F.fx.date, '2026-10-21');
 });
