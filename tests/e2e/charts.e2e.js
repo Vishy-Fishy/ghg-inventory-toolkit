@@ -14,7 +14,7 @@ const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 (async () => {
   const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
-  const ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true });
+  const ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true, permissions: ['clipboard-read', 'clipboard-write'] });
   await ctx.route('**/*', (r) => {
     const u = r.request().url();
     if (u.includes('exceljs')) return r.fulfill({ body: XL, contentType: 'application/javascript' });
@@ -40,6 +40,30 @@ const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
   const f2 = path.join(outDir, d2.suggestedFilename()); await d2.saveAs(f2);
   const svg = fs.readFileSync(f2, 'utf8');
   ok(svg.startsWith('<svg') && svg.includes('Emissions by scope') && svg.includes('GHG Inventory Toolkit'), 'scope chart downloads as an SVG with title and footer');
+
+  // transparent background
+  const alphaOf = (file) => p.evaluate(async (b64) => {
+    const img = new Image(); img.src = 'data:image/png;base64,' + b64; await img.decode();
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    return g.getImageData(5, 5, 1, 1).data[3];
+  }, fs.readFileSync(file).toString('base64'));
+  ok((await alphaOf(f1)) === 255, 'white-background PNG is opaque');
+  await p.locator('select.ctbg').first().selectOption('dark');
+  ok((await p.locator('select.ctbg').evaluateAll((els) => els.every((e) => e.value === 'dark'))), 'background choice applies to every chart on the page');
+  const [dt] = await Promise.all([p.waitForEvent('download'), p.locator('.ct button:has-text("PNG")').first().click()]);
+  const ft = path.join(outDir, dt.suggestedFilename()); await dt.saveAs(ft);
+  ok(/_transparent\.png$/.test(dt.suggestedFilename()) && (await alphaOf(ft)) === 0, 'transparent PNG has no background (' + dt.suggestedFilename() + ')');
+  const [dts] = await Promise.all([p.waitForEvent('download'), p.locator('.ct button:has-text("SVG")').first().click()]);
+  const fts = path.join(outDir, dts.suggestedFilename()); await dts.saveAs(fts);
+  const svgT = fs.readFileSync(fts, 'utf8');
+  ok(!/<rect width="1280" height="720"/.test(svgT) && svgT.includes('#f0efec'), 'transparent SVG has no page rectangle and uses light text');
+
+  // copy to the clipboard
+  await p.locator('.ct button:has-text("Copy")').first().click();
+  await p.waitForSelector('.ct button:has-text("Copied")');
+  const clip = await p.evaluate(async () => { const items = await navigator.clipboard.read(); const t = items[0].types; const blob = await items[0].getType('image/png'); return { types: t, size: blob.size }; });
+  ok(clip.types.includes('image/png') && clip.size > 5000, 'copy puts a PNG on the clipboard (' + Math.round(clip.size / 1024) + ' KB)');
+  await p.locator('select.ctbg').first().selectOption('light');
 
   // scope and category pages
   await p.goto(page + '#/scope/1'); await p.waitForSelector('.hero');

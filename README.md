@@ -13,7 +13,7 @@ Everything runs in your browser. Your data is not sent anywhere.
 - **Template in, results out.** One Excel template with dropdowns for every list field (fuels, vehicles, refrigerants, airports). Upload the filled file and everything is calculated.
 - **Honest about bad rows.** A row that cannot be calculated (missing quantity, unknown category, unit that does not fit) is excluded and listed with its sheet and row number. It is never counted as zero silently.
 - **Export.** Excel summary (live formulas, monthly table, every entry, data quality, method and sources), CSV of entries, and a print-ready report.
-- **Chart images.** Every chart has PNG and SVG buttons, and the Export page downloads all charts for the period as one ZIP. Images are 16:9 on white, ready for slides and reports.
+- **Chart images.** Every chart has Copy, PNG and SVG buttons, and the Export page downloads all charts for the period as one ZIP. Images are 16:9, with a white or a transparent background (light text, for dark slides), ready for slides and reports.
 
 Categories covered: stationary combustion, refrigerant leaks, fire extinguishers, SF₆ circuit breakers, owned vehicles and machinery, purchased electricity (location-based), purchased and capital goods, fuel- and energy-related activities, upstream transport, waste, business travel (road and air), employee commuting, and food.
 

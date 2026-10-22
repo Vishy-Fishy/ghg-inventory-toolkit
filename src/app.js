@@ -380,7 +380,10 @@
   }
 
   /* ------------------------------------------------------------ chart images (PNG, SVG, ZIP) */
-  function chartMeta() { return { org: META.org, period: periodLabel(), version: XP.VERSION }; }
+  var CH_KEY = 'ghg-chart-bg', CH = { bg: 'light' };
+  try { var cb0 = localStorage.getItem(CH_KEY); if (cb0 === 'dark' || cb0 === 'light') CH.bg = cb0; } catch (e) { /* ignore */ }
+  function chartMeta() { return { org: META.org, period: periodLabel(), version: XP.VERSION, bg: CH.bg }; }
+  function bgSuffix() { return CH.bg === 'dark' ? '_transparent' : ''; }
   function sub1() { return 'Tonnes CO₂e · ' + periodLabel(); }
   function specScopes(sum) { return { type: 'split', title: 'Emissions by scope', subtitle: sub1(), items: [1, 2, 3].map(function (s) { return { name: SCOPES[s].name + ' · ' + SCOPES[s].desc, v: sum.t[s], c: SCOPES[s].c }; }), total: sum.total }; }
   function specScopeMonths(ms) {
@@ -420,28 +423,43 @@
     return out;
   }
   function downloadChart(spec, fmt) {
-    var svg = XC.svg(spec, chartMeta()), stem = fileStem() + '_' + XC.slug(spec.title);
+    var svg = XC.svg(spec, chartMeta()), stem = fileStem() + '_' + XC.slug(spec.title) + bgSuffix();
     if (fmt === 'svg') return saveBlob(stem + '.svg', new Blob([svg], { type: 'image/svg+xml' }));
-    XC.toPng(svg, 2, function (err, b) { if (err) alert('Could not create the image: ' + err.message); else saveBlob(stem + '.png', b); });
+    XC.toPng(svg, 2, function (err, b) { if (err) alert('Could not create the image: ' + err.message); else saveBlob(stem + '.png', b); }, CH.bg === 'dark');
+  }
+  function copyChart(spec, btn) {
+    var label = btn.textContent;
+    function flash(t) { btn.textContent = t; setTimeout(function () { btn.textContent = label; }, 1800); }
+    var svg = XC.svg(spec, chartMeta()), dark = CH.bg === 'dark';
+    if (!(navigator.clipboard && navigator.clipboard.write && window.ClipboardItem)) { flash('Not supported'); alert('Your browser cannot copy images here. Use the PNG button instead.'); return; }
+    // the image is handed over as a promise so Safari, Chrome and Edge all accept it as part of the click
+    var png = new Promise(function (resolve, reject) { XC.toPng(svg, 2, function (err, b) { if (err) reject(err); else resolve(b); }, dark); });
+    navigator.clipboard.write([new ClipboardItem({ 'image/png': png })]).then(function () { flash('Copied ✓'); }, function () { flash('Blocked'); alert('The browser blocked copying. Use the PNG button instead, or allow clipboard access for this site.'); });
   }
   function chartTools(specFn) {
-    return h('div', { class: 'ct noprint' }, [h('span', { class: 'lb' }, ['Save image']),
+    var sel = h('select', { class: 'ctbg', 'aria-label': 'Image background', title: 'Transparent uses light text, for dark slides', onchange: function (e) {
+      CH.bg = e.target.value; try { localStorage.setItem(CH_KEY, CH.bg); } catch (er) { /* ignore */ }
+      document.querySelectorAll('select.ctbg').forEach(function (x) { x.value = CH.bg; });
+    } }, [h('option', { value: 'light' }, ['White']), h('option', { value: 'dark' }, ['Transparent'])]);
+    sel.value = CH.bg;
+    return h('div', { class: 'ct noprint' }, [h('span', { class: 'lb' }, ['Image']), sel,
+      h('button', { class: 'btn sm', title: 'Copy the chart, then paste it into a slide or document', onclick: function (e) { copyChart(specFn(), e.currentTarget); } }, ['Copy']),
       h('button', { class: 'btn sm', title: 'PNG image for slides and documents', onclick: function () { downloadChart(specFn(), 'png'); } }, ['PNG']),
       h('button', { class: 'btn sm', title: 'SVG, editable in PowerPoint and design tools', onclick: function () { downloadChart(specFn(), 'svg'); } }, ['SVG'])]);
   }
   function downloadAllCharts(fmt) {
     var list = allSpecs(), files = [], i = 0, meta = chartMeta();
-    function done() { saveBlob(fileStem() + '_charts_' + fmt + '.zip', new Blob([XC.zip(files)], { type: 'application/zip' })); }
+    function done() { saveBlob(fileStem() + '_charts_' + fmt + bgSuffix() + '.zip', new Blob([XC.zip(files)], { type: 'application/zip' })); }
     (function next() {
       if (i >= list.length) return done();
-      var spec = list[i].spec, svg = XC.svg(spec, meta), nm = String(i + 1).padStart(2, '0') + '_' + XC.slug(spec.title) + '.' + fmt; i++;
+      var spec = list[i].spec, svg = XC.svg(spec, meta), nm = String(i + 1).padStart(2, '0') + '_' + XC.slug(spec.title) + bgSuffix() + '.' + fmt; i++;
       if (fmt === 'svg') { files.push({ name: nm, data: XC.utf8(svg) }); return next(); }
-      XC.toPng(svg, 2, function (err, b) { if (err) return alert('Could not create the images: ' + err.message); b.arrayBuffer().then(function (buf) { files.push({ name: nm, data: new Uint8Array(buf) }); next(); }); });
+      XC.toPng(svg, 2, function (err, b) { if (err) return alert('Could not create the images: ' + err.message); b.arrayBuffer().then(function (buf) { files.push({ name: nm, data: new Uint8Array(buf) }); next(); }); }, CH.bg === 'dark');
     })();
   }
   function chartsCard() {
     var list = allSpecs();
-    var kids = [h('h2', null, ['Chart images']), h('p', { class: 'sub' }, ['Every chart for ' + periodLabel() + ' as an image for slides, reports and documents. PNG is 2560 × 1440 on a white background. SVG stays editable in PowerPoint and design tools.']),
+    var kids = [h('h2', null, ['Chart images']), h('p', { class: 'sub' }, ['Every chart for ' + periodLabel() + ' as an image for slides, reports and documents. PNG is 2560 × 1440. Choose a white or a transparent background (light text, for dark slides) next to any chart button or in the list below. SVG stays editable in PowerPoint and design tools.']),
       h('div', { class: 'row-btns' }, [h('button', { class: 'btn primary', disabled: !list.length, onclick: function () { downloadAllCharts('png'); } }, ['↓ All charts as PNG (.zip)']),
         h('button', { class: 'btn', disabled: !list.length, onclick: function () { downloadAllCharts('svg'); } }, ['↓ All charts as SVG (.zip)'])])];
     if (list.length) kids.push(h('div', { class: 'cl', id: 'chart-list' }, list.map(function (it) { return h('div', { class: 'ci' }, [h('span', null, [h('span', { class: 'k' }, [it.group]), it.spec.title]), chartTools(function () { return it.spec; })]); })));

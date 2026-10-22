@@ -32,6 +32,15 @@ test('columns chart: stacks series, labels months and totals, wraps a long legen
   for (const m of svg.matchAll(/<text x="([\d.]+)"/g)) assert.ok(Number(m[1]) <= C.WIDTH, 'nothing is drawn past the right edge');
 });
 
+test('transparent look: no white page, light text, brighter colours', () => {
+  const spec = { type: 'rank', title: 'Largest sources', items: [{ name: 'Diesel', v: 3000, c: 'var(--s1)' }] };
+  const dark = C.svg(spec, { ...META, bg: 'dark' }), light = C.svg(spec, META);
+  assert.ok(!dark.includes('fill="#ffffff"/>') || !/<rect width="1280" height="720" fill="#ffffff"/.test(dark), 'no white page rectangle');
+  assert.ok(/<rect width="1280" height="720" fill="#ffffff"/.test(light), 'light look keeps the white page');
+  assert.ok(dark.includes('#f0efec') && dark.includes('#3987e5') && !dark.includes('#2a78d6'), 'light text and the dark-mode colours');
+  assert.ok(C.svg(spec, META).includes('#2a78d6'), 'the next light chart is not affected');
+});
+
 test('empty chart says so instead of failing', () => {
   assert.ok(C.svg({ type: 'rank', title: 'x', items: [] }, META).includes('No data for this period.'));
   assert.ok(C.svg({ type: 'columns', title: 'x', series: [], items: [] }, META).includes('No data for this period.'));

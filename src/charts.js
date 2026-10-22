@@ -13,11 +13,14 @@
   'use strict';
   var W = 1280, H = 720, PAD = 56;
   var FONT = 'Inter, "Segoe UI", Roboto, Arial, sans-serif';
-  var INK = '#0b0b0b', INK2 = '#52514e', MUTED = '#6b6963', GRID = '#e6e4de', AXIS = '#b9b7af';
-  var VARS = { 's1': '#2a78d6', 's2': '#eb6834', 's3': '#1baf7a', 'c1': '#2a78d6', 'c2': '#eb6834', 'c3': '#1baf7a', 'c4': '#eda100', 'c5': '#e87ba4', 'c6': '#008300', 'c7': '#6250d6', 'c8': '#e34948' };
-  var OTHER = '#9a998f';
+  /* two looks: 'light' is a white page; 'dark' has a transparent background and light text, for dark slides */
+  var LIGHT = { dark: false, ink: '#0b0b0b', ink2: '#52514e', muted: '#6b6963', grid: '#e6e4de', axis: '#b9b7af', other: '#9a998f',
+    vars: { 's1': '#2a78d6', 's2': '#eb6834', 's3': '#1baf7a', 'c1': '#2a78d6', 'c2': '#eb6834', 'c3': '#1baf7a', 'c4': '#eda100', 'c5': '#e87ba4', 'c6': '#008300', 'c7': '#6250d6', 'c8': '#e34948' } };
+  var DARK = { dark: true, ink: '#f0efec', ink2: '#c3c2b7', muted: '#a3a298', grid: '#3a3a37', axis: '#5c5b54', other: '#8a897f',
+    vars: { 's1': '#3987e5', 's2': '#d95926', 's3': '#199e70', 'c1': '#3987e5', 'c2': '#d95926', 'c3': '#199e70', 'c4': '#c98500', 'c5': '#d55181', 'c6': '#1a9a1a', 'c7': '#9085e9', 'c8': '#e66767' } };
+  var TH = LIGHT;
 
-  function colour(c) { var m = /var\(--([a-z0-9]+)\)/i.exec(c || ''); return m ? (VARS[m[1]] || OTHER) : (c || OTHER); }
+  function colour(c) { var m = /var\(--([a-z0-9]+)\)/i.exec(c || ''); return m ? (TH.vars[m[1]] || TH.other) : (c || TH.other); }
   function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); }
   function fmtT(t) {
     if (t === null || t === undefined || isNaN(t)) return '–';
@@ -34,7 +37,7 @@
   function lum(hex) { var m = /^#?([0-9a-f]{6})$/i.exec(hex); if (!m) return 0; var n = parseInt(m[1], 16); return (0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255; }
   function text(x, y, s, o) {
     o = o || {};
-    return '<text x="' + x + '" y="' + y + '" font-size="' + (o.size || 14) + '" fill="' + (o.fill || INK) + '"' + (o.weight ? ' font-weight="' + o.weight + '"' : '') + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + '>' + esc(s) + '</text>';
+    return '<text x="' + x + '" y="' + y + '" font-size="' + (o.size || 14) + '" fill="' + (o.fill || TH.ink) + '"' + (o.weight ? ' font-weight="' + o.weight + '"' : '') + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + '>' + esc(s) + '</text>';
   }
   function slug(s) { return String(s || 'chart').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'chart'; }
 
@@ -44,7 +47,7 @@
     if (list.length <= max) return list;
     var head = list.slice(0, max - 1), rest = list.slice(max - 1), sum = 0;
     rest.forEach(function (x) { sum += x.v; });
-    head.push({ name: 'Other (' + rest.length + ' more)', v: sum, c: OTHER });
+    head.push({ name: 'Other (' + rest.length + ' more)', v: sum, c: TH.other });
     return head;
   }
 
@@ -53,12 +56,12 @@
     var foot = [meta.org, meta.period, 'tCO₂e', 'GHG Inventory Toolkit' + (meta.version ? ' v' + meta.version : '')].filter(Boolean).join('  ·  ');
     return '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" font-family=\'' + FONT + '\' role="img" aria-label="' + esc(spec.title) + '">' +
       '<title>' + esc(spec.title) + '</title><desc>' + esc((spec.subtitle || '') + ' ' + foot) + '</desc>' +
-      '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>' +
+      (TH.dark ? '' : '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>') +
       text(PAD, 70, cut(spec.title, 70), { size: 30, weight: 600 }) +
-      (spec.subtitle ? text(PAD, 100, cut(spec.subtitle, 120), { size: 17, fill: INK2 }) : '') +
+      (spec.subtitle ? text(PAD, 100, cut(spec.subtitle, 120), { size: 17, fill: TH.ink2 }) : '') +
       body +
-      '<line x1="' + PAD + '" x2="' + (W - PAD) + '" y1="' + (H - 44) + '" y2="' + (H - 44) + '" stroke="' + GRID + '"/>' +
-      text(PAD, H - 20, cut(foot, 150), { size: 13, fill: MUTED }) + '</svg>';
+      '<line x1="' + PAD + '" x2="' + (W - PAD) + '" y1="' + (H - 44) + '" y2="' + (H - 44) + '" stroke="' + TH.grid + '"/>' +
+      text(PAD, H - 20, cut(foot, 150), { size: 13, fill: TH.muted }) + '</svg>';
   }
 
   function rankRows(items, total, y0, y1) {
@@ -70,26 +73,26 @@
         text(PAD + 22, cy + 5, cut(it.name, 38), { size: 16 }) +
         '<rect x="' + x0 + '" y="' + (cy - bh / 2) + '" width="' + bw.toFixed(1) + '" height="' + bh + '" rx="4" fill="' + col + '"/>' +
         text(W - PAD - 70, cy + 5, fmtT(it.v / 1000) + ' t', { size: 16, weight: 600, anchor: 'end' }) +
-        text(W - PAD, cy + 5, pct(it.v, total), { size: 16, fill: INK2, anchor: 'end' });
+        text(W - PAD, cy + 5, pct(it.v, total), { size: 16, fill: TH.ink2, anchor: 'end' });
     });
     return s;
   }
 
   function buildRank(spec, meta) {
     var items = fold(spec.items || [], 12), total = spec.total || items.reduce(function (a, x) { return a + x.v; }, 0);
-    if (!items.length) return frame(spec, meta, text(W / 2, 360, 'No data for this period.', { size: 20, fill: MUTED, anchor: 'middle' }));
+    if (!items.length) return frame(spec, meta, text(W / 2, 360, 'No data for this period.', { size: 20, fill: TH.muted, anchor: 'middle' }));
     return frame(spec, meta, rankRows(items, total, 130, H - 70));
   }
 
   function buildSplit(spec, meta) {
     var items = fold(spec.items || [], 12), total = spec.total || items.reduce(function (a, x) { return a + x.v; }, 0), s = '';
-    if (!items.length) return frame(spec, meta, text(W / 2, 360, 'No data for this period.', { size: 20, fill: MUTED, anchor: 'middle' }));
+    if (!items.length) return frame(spec, meta, text(W / 2, 360, 'No data for this period.', { size: 20, fill: TH.muted, anchor: 'middle' }));
     var x = PAD, bw = W - 2 * PAD, by = 138, bh = 64;
     s += text(PAD, by - 6, fmtT(total / 1000) + ' tCO₂e in total', { size: 18, weight: 600 });
     items.forEach(function (it, i) {
       var w = bw * it.v / total, col = colour(it.c), gap = i < items.length - 1 ? 2 : 0;
       s += '<rect x="' + x.toFixed(1) + '" y="' + (by + 8) + '" width="' + Math.max(1, w - gap).toFixed(1) + '" height="' + bh + '" fill="' + col + '"' + (i === 0 ? ' rx="8"' : '') + '/>';
-      if (w > 64) s += text((x + w / 2).toFixed(1), by + 8 + bh / 2 + 6, pct(it.v, total), { size: 17, weight: 600, anchor: 'middle', fill: lum(col) > 0.6 ? INK : '#ffffff' });
+      if (w > 64) s += text((x + w / 2).toFixed(1), by + 8 + bh / 2 + 6, pct(it.v, total), { size: 17, weight: 600, anchor: 'middle', fill: lum(col) > 0.6 ? '#0b0b0b' : '#ffffff' });
       x += w;
     });
     s += rankRows(items, total, by + bh + 36, H - 64);
@@ -98,14 +101,14 @@
 
   function buildColumns(spec, meta) {
     var items = spec.items || [], series = spec.series || [];
-    if (!items.length) return frame(spec, meta, text(W / 2, 360, 'No data for this period.', { size: 20, fill: MUTED, anchor: 'middle' }));
+    if (!items.length) return frame(spec, meta, text(W / 2, 360, 'No data for this period.', { size: 20, fill: TH.muted, anchor: 'middle' }));
     var legend = '', rows = 0;
     if (series.length > 1) {
       var lx = PAD, ly = 126;
       series.forEach(function (sr) {
         var nm = cut(sr.name, 30), itemW = 18 + nm.length * 7.6 + 26;
         if (lx + itemW > W - PAD && lx > PAD) { lx = PAD; ly += 24; }
-        legend += '<rect x="' + lx.toFixed(1) + '" y="' + (ly - 11) + '" width="12" height="12" rx="3" fill="' + colour(sr.c) + '"/>' + text((lx + 18).toFixed(1), ly, nm, { size: 14, fill: INK2 });
+        legend += '<rect x="' + lx.toFixed(1) + '" y="' + (ly - 11) + '" width="12" height="12" rx="3" fill="' + colour(sr.c) + '"/>' + text((lx + 18).toFixed(1), ly, nm, { size: 14, fill: TH.ink2 });
         lx += itemW;
       });
       rows = (ly - 126) / 24 + 1;
@@ -113,8 +116,8 @@
     var L = PAD + 40, Rr = PAD, T = series.length > 1 ? 126 + rows * 24 + 36 : 140, B = H - 100, slot = (W - L - Rr) / items.length, bw = Math.min(46, slot * 0.68), s = legend;
     var raw = Math.max.apply(null, items.map(function (it) { return it.total; })) / 1000, step = niceStep(raw / 5), max = Math.max(step, Math.ceil(raw / step) * step);
     function y(t) { return T + (B - T) * (1 - t / max); }
-    for (var g = 0; g * step <= max + 1e-9; g++) { var gv = g * step; s += '<line x1="' + L + '" x2="' + (W - Rr) + '" y1="' + y(gv).toFixed(1) + '" y2="' + y(gv).toFixed(1) + '" stroke="' + (g ? GRID : AXIS) + '"/>' + text(L - 10, (y(gv) + 5).toFixed(1), tick(gv), { size: 13, fill: MUTED, anchor: 'end' }); }
-    s += text(PAD, T - 14, 'tCO₂e', { size: 13, fill: MUTED });
+    for (var g = 0; g * step <= max + 1e-9; g++) { var gv = g * step; s += '<line x1="' + L + '" x2="' + (W - Rr) + '" y1="' + y(gv).toFixed(1) + '" y2="' + y(gv).toFixed(1) + '" stroke="' + (g ? TH.grid : TH.axis) + '"/>' + text(L - 10, (y(gv) + 5).toFixed(1), tick(gv), { size: 13, fill: TH.muted, anchor: 'end' }); }
+    s += text(PAD, T - 14, 'tCO₂e', { size: 13, fill: TH.muted });
     var every = slot >= 34 ? 1 : slot >= 22 ? 2 : slot >= 14 ? 3 : 6, labelTotals = slot >= 58;
     items.forEach(function (it, i) {
       var cx = L + slot * i + slot / 2, x0 = cx - bw / 2, acc = 0, top = null;
@@ -125,21 +128,21 @@
         s += '<rect x="' + x0.toFixed(1) + '" y="' + y1.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + hh.toFixed(1) + '" fill="' + colour(sr.c) + '"' + (sr.id === top ? ' rx="4"' : '') + '/>';
         acc += v;
       });
-      if (labelTotals && it.total > 0) s += text(cx.toFixed(1), (y(acc) - 8).toFixed(1), fmtT(it.total / 1000), { size: 13, fill: INK2, anchor: 'middle' });
-      if (i % every === 0) { s += text(cx.toFixed(1), B + 22, it.label, { size: 14, fill: INK2, anchor: 'middle' }); if (it.sub) s += text(cx.toFixed(1), B + 40, it.sub, { size: 13, fill: MUTED, anchor: 'middle' }); }
+      if (labelTotals && it.total > 0) s += text(cx.toFixed(1), (y(acc) - 8).toFixed(1), fmtT(it.total / 1000), { size: 13, fill: TH.ink2, anchor: 'middle' });
+      if (i % every === 0) { s += text(cx.toFixed(1), B + 22, it.label, { size: 14, fill: TH.ink2, anchor: 'middle' }); if (it.sub) s += text(cx.toFixed(1), B + 40, it.sub, { size: 13, fill: TH.muted, anchor: 'middle' }); }
     });
     return frame(spec, meta, s);
   }
 
-  function svg(spec, meta) { return spec.type === 'columns' ? buildColumns(spec, meta) : spec.type === 'split' ? buildSplit(spec, meta) : buildRank(spec, meta); }
+  function svg(spec, meta) { TH = meta && meta.bg === 'dark' ? DARK : LIGHT; return spec.type === 'columns' ? buildColumns(spec, meta) : spec.type === 'split' ? buildSplit(spec, meta) : buildRank(spec, meta); }
 
   /* browser only: SVG text -> PNG blob at 2x */
-  function toPng(svgText, scale, cb) {
+  function toPng(svgText, scale, cb, transparent) {
     var img = new Image(); scale = scale || 2;
     img.onload = function () {
       try {
         var c = document.createElement('canvas'); c.width = W * scale; c.height = H * scale;
-        var g = c.getContext('2d'); g.fillStyle = '#ffffff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+        var g = c.getContext('2d'); if (!transparent) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, c.width, c.height); } g.drawImage(img, 0, 0, c.width, c.height);
         c.toBlob(function (b) { cb(b ? null : new Error('PNG could not be created'), b); }, 'image/png');
       } catch (e) { cb(e); }
     };

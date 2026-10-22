@@ -23,6 +23,10 @@ authors:
     given-names: Gaurav
     affiliation: "EMC"
     email: gaurav.limaye@emcentre.com
+  - family-names: Mahanta
+    given-names: Sarashi
+    affiliation: "EMC"
+    email: sarashi.mahanta@emcentre.com
 repository-code: "https://github.com/Vishy-Fishy/ghg-inventory-toolkit"
 keywords:
   - greenhouse gas accounting
